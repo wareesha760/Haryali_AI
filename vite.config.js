@@ -7,9 +7,9 @@ export default defineConfig({
   plugins: [
     react(),
         tailwindcss(),
-
   ],
-  base:process.env.VITA_BASE_PATH || "/"
+  base: process.env.VITE_BASE_PATH || "/Kisaan_Bot_Webapp"
+  
   
     
 })

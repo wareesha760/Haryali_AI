@@ -1,6 +1,7 @@
 import React from "react";
 import { ShoppingCart } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import ToolsImg from "../assets/Tools.jpeg";
 import TwineImg from "../assets/Twine.jpeg";
 import WallBagsImg from "../assets/WallBags.jpeg";
@@ -13,8 +14,6 @@ import PlantCoverImg from "../assets/PlantCover.jpeg";
 import PestSprayImg from "../assets/PestSpray.jpeg";
 import SeedPackImg from "../assets/SeedPack.jpeg";
 import MoistureMeterImg from "../assets/MoistureMeter.jpeg";
-
-
 
 const products = [
   {
@@ -96,8 +95,13 @@ const products = [
   },
 ];
 
-
 export default function Shop() {
+  const navigate = useNavigate();
+
+  const handleBuy = (product) => {
+    navigate("/order", { state: { orders: [product] } });
+  };
+
   return (
     <div className="min-h-screen flex flex-col items-center pt-40 px-6 relative font-[Noto Nastaliq Urdu] bg-transparent">
       {/* Floating Shapes */}
@@ -112,7 +116,7 @@ export default function Shop() {
         transition={{ repeat: Infinity, duration: 6 }}
       />
 
-      {/* Header Centered */}
+      {/* Header */}
       <motion.div
         className="relative mb-10 text-center"
         initial={{ opacity: 0, y: -20 }}
@@ -134,9 +138,9 @@ export default function Shop() {
         </motion.div>
       </motion.div>
 
-      {/* Big Glass Card */}
+      {/* Products Card Grid */}
       <motion.div
-        className="w-full max-w-6xl p-8 rounded-3xl bg-white/50 backdrop-blur-xl shadow-2xl border border-white/30 mb-20" 
+        className="w-full max-w-6xl p-8 rounded-3xl bg-white/50 backdrop-blur-xl shadow-2xl border border-white/30 mb-20"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
@@ -159,7 +163,9 @@ export default function Shop() {
                 className="w-full h-40 object-cover rounded-lg mb-3"
               />
 
-              <h3 className="text-lg font-bold text-green-700 mb-2">{product.name}</h3>
+              <h3 className="text-lg font-bold text-green-700 mb-2">
+                {product.name}
+              </h3>
 
               <div className="flex items-center justify-end gap-2">
                 {product.originalPrice && (
@@ -172,7 +178,10 @@ export default function Shop() {
                 </span>
               </div>
 
-              <button className="mt-3 w-full bg-gradient-to-r from-green-400 to-lime-500 text-white py-2 rounded-lg hover:shadow-lg">
+              <button
+                onClick={() => handleBuy(product)}
+                className="mt-3 w-full bg-gradient-to-r from-green-400 to-lime-500 text-white py-2 rounded-lg hover:shadow-lg"
+              >
                 خریدیں
               </button>
             </motion.div>

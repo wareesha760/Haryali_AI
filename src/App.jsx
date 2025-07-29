@@ -19,7 +19,7 @@ import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import SmartPlanner from "./pages/SmartPlanner";
 import SignupPage from "./pages/Signup";
-
+import OrderPage from "./pages/OrderPage";
 // ✅ Correct path if assets folder is inside src
 import bgImage from "./assets/bg5.jpg";
 
@@ -66,6 +66,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/signup" element={<SignupPage />} />
+            <Route path="/order" element={<OrderPage />} />
           </Routes>
 
           <Footer />

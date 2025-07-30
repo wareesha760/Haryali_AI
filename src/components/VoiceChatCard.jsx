@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import botImg from "../assets/chatbot.jpg";
 import farmerImg from "../assets/farmer.png";
+import axios from "axios";
+
 
 
 
@@ -18,17 +20,33 @@ const VoiceChatCard = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSendText = () => {
-    if (inputText.trim() === "") return;
-    setMessages((prev) => [...prev, { type: "user", text: inputText }]);
-    setInputText("");
-    setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        { type: "bot", text: "یہ ایک خودکار جواب ہے۔" },
-      ]);
-    }, 1000);
-  };
+  const handleSendText = async () => {
+  if (inputText.trim() === "") return;
+
+  // Add user message first
+  setMessages((prev) => [...prev, { type: "user", text: inputText }]);
+  const userMessage = inputText;
+  setInputText("");
+
+  try {
+    // Send user input to backend
+    const res = await axios.post("http://localhost:5001/api/chat/ask", {
+      userInput: userMessage,
+    });
+
+    const botReply = res.data.reply || " کوئی جواب نہیں ملا۔";
+
+    // Add bot response
+    setMessages((prev) => [...prev, { type: "bot", text: botReply }]);
+  } catch (err) {
+    console.error("API Error:", err.message);
+    setMessages((prev) => [
+      ...prev,
+      { type: "bot", text: " سرور سے جواب نہیں ملا۔" },
+    ]);
+  }
+};
+
 
   const handleMicClick = () => {
     setIsRecording(true);

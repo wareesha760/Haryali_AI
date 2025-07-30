@@ -3,22 +3,91 @@ import { motion } from "framer-motion";
 
 export default function AppointmentsPage() {
   const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // ✅ Load saved appointments from localStorage
+  // ✅ Fetch appointments from backend API
   useEffect(() => {
-    const saved = JSON.parse(localStorage.getItem("appointments") || "[]");
-    setAppointments(saved);
+    const fetchAppointments = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setError("Please login to view your appointments");
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:5001/api/appointments", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch appointments");
+        }
+
+        const data = await response.json();
+        console.log("Fetched appointments:", data);
+        setAppointments(data);
+      } catch (error) {
+        console.error("Error fetching appointments:", error);
+        setError("Failed to load appointments");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAppointments();
   }, []);
 
-  // ✅ Delete Appointment
-  const deleteAppointment = (id) => {
-    const updated = appointments.filter((appt) => appt.id !== id);
-    setAppointments(updated);
-    localStorage.setItem("appointments", JSON.stringify(updated));
+  // ✅ Delete Appointment from backend
+  const deleteAppointment = async (id) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please login to delete appointments");
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:5001/api/appointments/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete appointment");
+      }
+
+      // Remove from local state
+      const updated = appointments.filter((appt) => appt._id !== id);
+      setAppointments(updated);
+    } catch (error) {
+      console.error("Error deleting appointment:", error);
+      alert("Failed to delete appointment");
+    }
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-xl text-green-600">Loading appointments...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-xl text-red-600">{error}</div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen flex flex-col items-center pt-32 px-6 relative">
+    <div className="min-h-screen flex flex-col items-center pt-40 px-6 relative">
       {/* 🌟 Floating Shapes */}
       <motion.div
         className="absolute top-10 left-20 w-28 h-28 bg-green-300 rounded-full blur-3xl opacity-20"
@@ -69,7 +138,7 @@ export default function AppointmentsPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {appointments.map((appt) => (
               <motion.div
-                key={appt.id}
+                key={appt._id}
                 whileHover={{ scale: 1.03 }}
                 transition={{ type: "spring", stiffness: 150 }}
                 className="bg-white/80 p-5 rounded-xl shadow-md border border-white/30 text-right"
@@ -83,7 +152,7 @@ export default function AppointmentsPage() {
                 </p>
 
                 <button
-                  onClick={() => deleteAppointment(appt.id)}
+                  onClick={() => deleteAppointment(appt._id)}
                   className="mt-3 bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600 transition"
                 >
                   ❌ اپوائنٹمنٹ حذف کریں

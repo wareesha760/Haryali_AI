@@ -33,7 +33,7 @@ const experts = [
   },
 ];
 
-export default function ExpertCards({ onBookAppointment, appointments }) {
+export default function ExpertCards({ onBookAppointment, appointments = [] }) {
   const [showModal, setShowModal] = useState(false);
   const [selectedExpert, setSelectedExpert] = useState(null);
   const [form, setForm] = useState({ name: "", datetime: "" });
@@ -44,33 +44,53 @@ export default function ExpertCards({ onBookAppointment, appointments }) {
     setShowModal(true);
   };
 
-  const submitAppointment = () => {
-  if (!form.name || !form.datetime) {
-    alert("براہ کرم تمام فیلڈز پر کریں");
-    return;
-  }
+  const submitAppointment = async () => {
+    if (!form.name || !form.datetime) {
+      alert("براہ کرم تمام فیلڈز پر کریں");
+      return;
+    }
 
-  // ✅ Create appointment with ID
-  const newAppointment = {
-    id: Date.now(), // unique ID
-    expert: selectedExpert.name,
-    name: form.name,
-    datetime: form.datetime,
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("براہ کرم پہلے لاگ ان کریں");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5001/api/appointments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          expert: selectedExpert.name,
+          name: form.name,
+          datetime: form.datetime,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create appointment");
+      }
+
+      const newAppointment = await response.json();
+      console.log("Appointment created:", newAppointment);
+
+      onBookAppointment && onBookAppointment(newAppointment);
+
+      setShowModal(false);
+      setForm({ name: "", datetime: "" });
+      alert("✅ اپوائنٹمنٹ بک ہو گئی ہے");
+
+      // ✅ Navigate to appointments page
+      navigate("/appointments");
+    } catch (error) {
+      console.error("Error creating appointment:", error);
+      alert("❌ اپوائنٹمنٹ بک نہیں ہو سکی۔ براہ کرم دوبارہ کوشش کریں");
+    }
   };
-
-  // ✅ Save to localStorage
-  const savedAppointments =
-    JSON.parse(localStorage.getItem("appointments") || "[]");
-  const updatedAppointments = [...savedAppointments, newAppointment];
-  localStorage.setItem("appointments", JSON.stringify(updatedAppointments));
-
-  // ✅ Call parent function (optional)
-  onBookAppointment && onBookAppointment(newAppointment);
-
-  setShowModal(false);
-  setForm({ name: "", datetime: "" });
-  alert("اپوائنٹمنٹ بک ہو گئی ہے");
-};
 
   return (
     <div className="min-h-screen flex flex-col items-center pt-40 pb-10 px-6 relative">
@@ -108,7 +128,7 @@ export default function ExpertCards({ onBookAppointment, appointments }) {
         </motion.div>
       </motion.div>
 
-      {/* 🌟 BIG Glass Card */}
+      {/* Glass Card */}
       <motion.div
         className="w-full max-w-5xl p-8 rounded-3xl bg-white/50 backdrop-blur-xl shadow-2xl border border-white/30"
         initial={{ opacity: 0, y: 30 }}
@@ -172,7 +192,7 @@ export default function ExpertCards({ onBookAppointment, appointments }) {
             }
             className="bg-gradient-to-r from-green-500 to-lime-500 text-white px-6 py-3 rounded-full shadow-md hover:shadow-xl"
           >
-       اپوائنٹمنٹ دیکھیں
+            اپوائنٹمنٹ دیکھیں
           </button>
         </div>
       </motion.div>
@@ -199,7 +219,9 @@ export default function ExpertCards({ onBookAppointment, appointments }) {
               className="w-full border p-2 mb-4 text-black rounded text-right"
               type="datetime-local"
               value={form.datetime}
-              onChange={(e) => setForm({ ...form, datetime: e.target.value })}
+              onChange={(e) =>
+                setForm({ ...form, datetime: e.target.value })
+              }
             />
 
             <div className="flex gap-2">

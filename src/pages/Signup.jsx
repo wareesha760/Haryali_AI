@@ -15,19 +15,38 @@ export default function Signup() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSignup = (e) => {
-    e.preventDefault();
-    const { name, email, phone, password } = form;
+const handleSignup = async (e) => {
+  e.preventDefault();
+  const { name, email, phone, password } = form;
 
-    if (!name || !email || !phone || !password) {
-      alert("تمام فیلڈز ضروری ہیں");
+  if (!name || !email || !phone || !password) {
+    alert("تمام فیلڈز ضروری ہیں");
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:5001/api/auth/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ name, email, phone, password }),
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message || "سائن اپ ناکام ہو گیا");
       return;
     }
 
-    // ✅ You can also call backend API here for signup
-    login({ name, email, phone }); // ✅ Add user to AuthContext
-    navigate("/"); // ✅ Redirect to Home
-  };
+    login(data.user); // login in AuthContext
+    navigate("/");
+  } catch (error) {
+    alert("سرور کی خرابی: دوبارہ کوشش کریں");
+  }
+};
+
 
   return (
     <div className="min-h-screen flex flex-col items-center pt-40 px-6 relative font-[Noto Nastaliq Urdu]">

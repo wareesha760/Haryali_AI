@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import "@fontsource/noto-nastaliq-urdu";
 
@@ -14,18 +14,43 @@ export default function Login() {
 
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    const { name, email, phone, password } = form;
+    const { email, password } = form;
 
-    if (!name || !email || !phone || !password) {
-      alert("تمام فیلڈز ضروری ہیں");
+    if (!email || !password) {
+      alert("ای میل اور پاس ورڈ ضروری ہیں");
       return;
     }
 
-    login({ name, email, phone });
-    navigate("/");
+    try {
+      const response = await fetch("http://localhost:5001/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+        login(data.user);
+
+        // ✅ Check redirect path if user was trying to go to appointments
+        const redirectPath =
+          localStorage.getItem("redirectAfterLogin") || "/";
+        localStorage.removeItem("redirectAfterLogin");
+        navigate(redirectPath);
+      } else {
+        alert(data.message || "لاگ ان ناکام");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("سرور سے رابطہ نہیں ہو سکا");
+    }
   };
 
   return (
@@ -127,5 +152,3 @@ export default function Login() {
     </div>
   );
 }
-
-

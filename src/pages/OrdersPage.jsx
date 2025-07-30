@@ -5,14 +5,36 @@ export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    const savedOrders = JSON.parse(localStorage.getItem("orders") || "[]");
-    setOrders(savedOrders);
-  }, []);
+  const fetchOrders = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    try {
+      const response = await fetch("http://localhost:5001/api/orders", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) throw new Error("Failed to fetch orders");
+
+      const data = await response.json();
+
+      // ✅ Add this:
+      console.log("Fetched data from /api/orders:", data);
+
+      setOrders(data.orders); // assuming backend sends { orders: [...] }
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
+
+  fetchOrders();
+}, []);
 
   const deleteOrder = (id) => {
-    const updated = orders.filter((order) => order.id !== id);
+    const updated = orders.filter((order) => order._id !== id); // ✅ Use _id
     setOrders(updated);
-    localStorage.setItem("orders", JSON.stringify(updated));
   };
 
   return (
@@ -67,7 +89,7 @@ export default function OrdersPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {orders.map((order) => (
               <motion.div
-                key={order.id}
+                key={order._id} // ✅ Use MongoDB _id
                 whileHover={{ scale: 1.03 }}
                 transition={{ type: "spring", stiffness: 150 }}
                 className="bg-white/80 p-5 rounded-xl shadow-md border border-white/30"
@@ -81,7 +103,7 @@ export default function OrdersPage() {
                 </p>
                 <p className="text-sm text-gray-600">🚚 طریقہ: {order.type}</p>
                 <button
-                  onClick={() => deleteOrder(order.id)}
+                  onClick={() => deleteOrder(order._id)}
                   className="mt-3 bg-red-500 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-600 transition"
                 >
                   آرڈر حذف کریں
@@ -94,4 +116,3 @@ export default function OrdersPage() {
     </div>
   );
 }
-

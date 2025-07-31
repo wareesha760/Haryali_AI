@@ -36,9 +36,11 @@ function App() {
     <AuthProvider>
       {/* ✅ Correct background image usage */}
       <div
-        className="min-h-screen bg-fixed bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${bgImage})` }}
-      >
+  className="min-h-screen w-full bg-cover bg-center bg-no-repeat bg-fixed sm:bg-scroll sm:bg-top"
+  style={{ backgroundImage: `url(${bgImage})` }}
+>
+
+
         <div className="bg-opacity-80 min-h-screen">
           <Navbar />
 

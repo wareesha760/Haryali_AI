@@ -47,7 +47,7 @@ export default function TractorList() {
       {/* ✅ Order Button */}
       <div className="text-center pt-6">
         <motion.button
-          onClick={() => (window.location.href = "/orders")}
+          onClick={() => (window.location.href = "/orders-list")}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
           className="bg-gradient-to-r from-green-400 to-lime-500 text-white px-8 py-3 text-lg rounded-full shadow-lg hover:shadow-xl transition"

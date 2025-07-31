@@ -8,6 +8,8 @@ import TractorsPage from "./pages/tractor";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import OrdersPage from "./pages/OrdersPage";
+import OrdersListPage from "./pages/OrdersListPage";
+import ShopOrdersPage from "./pages/ShopOrdersPage";
 import FertilizerCalculator from "./pages/FertilizerCalculator";
 import ExpertCards from "./components/ExpertCards";
 import AppointmentsPage from "./pages/AppointmentsPage";
@@ -45,6 +47,8 @@ function App() {
             <Route path="/weather" element={<Weather />} />
             <Route path="/tractors" element={<TractorsPage />} />
             <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/orders-list" element={<OrdersListPage />} />
+            <Route path="/shop-orders" element={<ShopOrdersPage />} />
             <Route path="/fertilizer" element={<FertilizerCalculator />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/pricing" element={<Pricing />} />

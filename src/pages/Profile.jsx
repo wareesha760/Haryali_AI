@@ -1,7 +1,7 @@
 import React from "react";
 import { useAuth } from "../context/AuthContext";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "@fontsource/noto-nastaliq-urdu";
 
 const Profile = () => {
@@ -82,13 +82,29 @@ const Profile = () => {
               <span className="text-right">{user.phone}</span>
             </div>
 
-            {/* ✅ Logout Button */}
-            <button
-              onClick={handleLogout}
-              className="mt-4 w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-lg transition-all"
-            >
-              🔓 لاگ آؤٹ کریں
-            </button>
+            {/* Action Buttons */}
+            <div className="mt-4 space-y-3">
+              <Link
+                to="/orders-list"
+                className="block w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded-lg transition-all text-center"
+              >
+                📦 میرے آرڈرز دیکھیں
+              </Link>
+              
+              <Link
+                to="/appointments"
+                className="block w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 rounded-lg transition-all text-center"
+              >
+                📅 میری اپوائنٹمنٹس
+              </Link>
+
+              <button
+                onClick={handleLogout}
+                className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 rounded-lg transition-all"
+              >
+                🔓 لاگ آؤٹ کریں
+              </button>
+            </div>
           </div>
         </div>
       </motion.div>

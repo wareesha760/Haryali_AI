@@ -21,6 +21,7 @@ export default function TractorCard({ title, catClass, specs }) {
   }
 
   const newOrder = {
+    orderType: "tractor",
     title,
     catClass,
     location,
@@ -52,8 +53,8 @@ export default function TractorCard({ title, catClass, specs }) {
     setEnd("");
     setType("Self Pickup");
 
-    // Redirect to orders page
-    navigate("/orders");
+    // Redirect to orders list page
+    navigate("/orders-list");
   } catch (err) {
     console.error(err);
     toast.error("❌ آرڈر بھیجنے میں مسئلہ پیش آیا");

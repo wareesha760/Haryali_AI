@@ -98,8 +98,45 @@ const products = [
 export default function Shop() {
   const navigate = useNavigate();
 
-  const handleBuy = (product) => {
-    navigate("/order", { state: { orders: [product] } });
+  const handleBuy = async (product) => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please login to place orders");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5001/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          orderType: "shop",
+          name: product.name,
+          image: product.image,
+          price: product.price,
+          originalPrice: product.originalPrice,
+          isSale: product.isSale,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to place order");
+      }
+
+      const data = await response.json();
+      console.log("Order placed successfully:", data);
+      alert("آرڈر کامیابی سے رکھا گیا!");
+      
+      // Navigate to shop orders to show the new order
+      navigate("/shop-orders");
+    } catch (error) {
+      console.error("Error placing order:", error);
+      alert("آرڈر رکھنے میں مسئلہ ہوا۔ براہ کرم دوبارہ کوشش کریں۔");
+    }
   };
 
   return (
@@ -186,6 +223,18 @@ export default function Shop() {
               </button>
             </motion.div>
           ))}
+        </div>
+
+        {/* ✅ Shop Orders Button */}
+        <div className="text-center pt-6">
+          <motion.button
+            onClick={() => navigate("/shop-orders")}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-gradient-to-r from-green-400 to-lime-500 text-white px-8 py-3 text-lg rounded-full shadow-lg hover:shadow-xl transition"
+          >
+            🛒 دکان کے آرڈرز دیکھیں
+          </motion.button>
         </div>
       </motion.div>
     </div>

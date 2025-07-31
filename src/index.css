@@ -1,1 +1,29 @@
 @import "tailwindcss";
+
+/* Responsive background image fix */
+@media (max-width: 640px) {
+  .bg-fixed {
+    background-attachment: scroll !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .bg-fixed {
+    background-attachment: fixed !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+  }
+}
+
+@media (min-width: 1025px) {
+  .bg-fixed {
+    background-attachment: fixed !important;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+  }
+}

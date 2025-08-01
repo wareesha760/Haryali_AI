@@ -22,6 +22,8 @@ import Profile from "./pages/Profile";
 import SmartPlanner from "./pages/SmartPlanner";
 import SignupPage from "./pages/Signup";
 import OrderPage from "./pages/OrderPage";
+import AddTractor from "./pages/AddTractor";
+import AddProduct from "./pages/AddProduct";
 // ✅ Correct path if assets folder is inside src
 import bgImage from "./assets/bg5.jpg";
 
@@ -53,7 +55,9 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/weather" element={<Weather />} />
-            <Route path="/tractors" element={<TractorsPage />} />
+            <Route path="/tractor" element={<TractorsPage />} />
+            <Route path="/add-tractor" element={<AddTractor />} />
+            <Route path="/add-product" element={<AddProduct />} />
             <Route path="/orders" element={<OrdersPage />} />
             <Route path="/orders-list" element={<OrdersListPage />} />
             <Route path="/shop-orders" element={<ShopOrdersPage />} />

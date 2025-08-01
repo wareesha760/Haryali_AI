@@ -25,7 +25,7 @@ const cardData = [
     title: "کرایہ مشینری", 
     image: tractorImg, 
     description: "-زرعی مشینری کا کرایہ پر لینا یا دینا اب آسان! ٹریکٹر، ہارویسٹر، اور دیگر آلات صرف ایک کلک کی دوری پر", 
-    url: "/tractors" 
+    url: "/tractor" 
   },
   { 
     title: "سمارٹ کسان پلانر", 

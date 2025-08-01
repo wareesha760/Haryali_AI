@@ -7,6 +7,8 @@ const userSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     phone: { type: String, required: true },
     password: { type: String, required: true },
+    isTractorOwner: { type: Boolean, default: false },
+    isShopOwner: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

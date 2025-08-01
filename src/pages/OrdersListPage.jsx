@@ -195,7 +195,7 @@ export default function OrdersListPage() {
           transition={{ type: "spring", stiffness: 150 }}
         >
           <h1 className="text-3xl font-extrabold text-green-800">
-            📦 آپ کے آرڈرز
+             آپ کے آرڈرز
           </h1>
         </motion.div>
       </motion.div>

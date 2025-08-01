@@ -1,83 +1,107 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
+import { FaCrown, FaLeaf } from "react-icons/fa";
 import "@fontsource/noto-nastaliq-urdu";
 
 const pricingPlans = {
-  normal: [
+  mamoli: [
     {
-      name: "معمولی",
+      name: "معمولی پیکج",
       monthlyPrice: "بالکل مفت",
       annualPrice: "۰ روپے/سال",
       features: [
         "AI سے مشورہ پائیں دن میں ۵ بار",
         "اپنے علاقے کا موسم جانیں",
         "زرعی مشینری کرایے پر لیں اور رعایت پائیں",
+        "بنیادی زرعی مشورے",
+        "موسم کی پیش گوئی",
       ],
       isHighlighted: false,
+      icon: FaLeaf,
     },
   ],
   premium: [
     {
-      name: "پریمیم",
+      name: "پریمیم پیکج",
       monthlyPrice: "۵۰۰ روپے",
       annualPrice: "۶۰۰۰ روپے/سال",
       features: [
         "AI سے دن میں ۱۰ سے ۱۵ بار مشورہ پائیں",
         "اسمارٹ کراپ ایڈوائزر پلان",
         "زرعی مصنوعات پر رعایت",
+        "پیشہ ور زرعی مشیروں سے رابطہ",
+        "تفصیلی کراپ پلاننگ",
+        "پیشہ ور ویڈیو گائیڈز",
+        "۲۴/۷ سپورٹ",
       ],
       isHighlighted: true,
+      icon: FaCrown,
     },
   ],
 };
 
-const PricingCard = ({ plan }) => (
-  <motion.div
-    whileHover={{ scale: 1.05 }}
-    className={`relative flex flex-col p-6 rounded-2xl shadow-lg border border-gray-200 
-      ${
-        plan.isHighlighted
-          ? "bg-gradient-to-br from-green-400 to-green-300 text-black"
-          : "bg-white text-gray-800"
-      } 
-      w-80 transition-all duration-500`}
-  >
-    <h2 className="text-2xl font-bold text-center mb-3">{plan.name}</h2>
-
-    <div className="text-center mb-4">
-      <p className="text-3xl font-bold">
-        {plan.monthlyPrice} <span className="text-sm">/ماہ</span>
-      </p>
-      <p className="text-base mt-1">{plan.annualPrice}</p>
-    </div>
-
-    <button
-      className={`w-full py-3 px-5 mb-4 rounded-full font-bold text-lg transition-all duration-300 border ${
-        plan.isHighlighted
-          ? "bg-white text-green-700 hover:bg-green-200"
-          : "bg-transparent text-green-700 border-green-700 hover:bg-green-100"
-      }`}
+const PricingCard = ({ plan }) => {
+  const IconComponent = plan.icon;
+  
+  return (
+    <motion.div
+      whileHover={{ scale: 1.02 }}
+      className={`relative flex flex-col p-6 rounded-2xl shadow-lg border border-gray-200 
+        ${
+          plan.isHighlighted
+            ? "bg-gradient-to-br from-green-400 to-green-300 text-black"
+            : "bg-white text-gray-800"
+        } 
+        w-full transition-all duration-500`}
     >
-      سبسکرائب کریں
-    </button>
+      {/* Icon */}
+      <div className="flex justify-center mb-4">
+        <div className={`p-3 rounded-full ${
+          plan.isHighlighted 
+            ? "bg-white/80 text-green-700" 
+            : "bg-green-100 text-green-600"
+        }`}>
+          <IconComponent className="text-2xl" />
+        </div>
+      </div>
 
-    {/* Bullet Points Fixed */}
-    <ul className="w-full space-y-3 text-right text-lg">
-      {plan.features.map((feature, index) => (
-        <li
-          key={index}
-          className="flex items-center justify-end gap-2 pr-2"
-        >
-          <span>{feature}</span>
-          <span className="text-green-600 text-xl">✔</span>
-        </li>
-      ))}
-    </ul>
-  </motion.div>
-);
+      <h2 className="text-2xl font-bold text-center mb-3">{plan.name}</h2>
+
+      <div className="text-center mb-6">
+        <p className="text-3xl font-bold">
+          {plan.monthlyPrice} <span className="text-sm">/ماہ</span>
+        </p>
+        <p className="text-base mt-1">{plan.annualPrice}</p>
+      </div>
+
+      <button
+        className={`w-full py-3 px-5 mb-6 rounded-full font-bold text-lg transition-all duration-300 border ${
+          plan.isHighlighted
+            ? "bg-white text-green-700 hover:bg-green-200"
+            : "bg-transparent text-green-700 border-green-700 hover:bg-green-100"
+        }`}
+      >
+        سبسکرائب کریں
+      </button>
+
+      {/* Bullet Points */}
+      <ul className="w-full space-y-3 text-right text-lg">
+        {plan.features.map((feature, index) => (
+          <li
+            key={index}
+            className="flex items-center justify-end gap-2 pr-2"
+          >
+            <span>{feature}</span>
+            <span className="text-green-600 text-xl">✔</span>
+          </li>
+        ))}
+      </ul>
+    </motion.div>
+  );
+};
 
 export default function Pricing() {
-  const [activeTab, setActiveTab] = useState("normal");
+  const [activeTab, setActiveTab] = useState("mamoli");
 
   return (
     <div className="min-h-screen pt-40 px-6 relative font-[Noto Nastaliq Urdu] flex flex-col items-center">
@@ -115,34 +139,55 @@ export default function Pricing() {
         </motion.div>
       </motion.div>
 
-      {/* Tabs */}
-      <div className="flex justify-center mb-6 gap-4">
-        {["normal", "premium"].map((type) => (
-          <button
-            key={type}
-            onClick={() => setActiveTab(type)}
-            className={`px-8 py-3 rounded-full font-bold text-lg border transition-all duration-300 transform hover:scale-105 ${
-              activeTab === type
-                ? "bg-green-700 text-white shadow-md"
-                : "bg-transparent text-green-700 border-green-700"
-            }`}
-          >
-            {type === "normal" ? "معمولی پیکج" : "پریمیم پیکج"}
-          </button>
-        ))}
-      </div>
-
-      {/* Outer Glass Card - Slightly Larger than Inner */}
+      {/* Glass Card with Tabs Inside */}
       <motion.div
-        className="p-8 rounded-3xl bg-white/50 backdrop-blur-xl shadow-2xl border border-white/30 mb-20 flex justify-center"
-        style={{ width: "370px" }} // Slightly larger than inner (w-80 = 320px)
+        className="w-full max-w-4xl p-8 rounded-3xl bg-white/50 backdrop-blur-xl shadow-2xl border border-white/30 mb-20"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
-        {pricingPlans[activeTab].map((plan, index) => (
-          <PricingCard key={index} plan={plan} />
-        ))}
+        {/* Tabs Inside Glass Card */}
+        <div className="flex justify-center mb-8 gap-4">
+          {[
+            { key: "mamoli", label: "معمولی پیکج", icon: FaLeaf },
+            { key: "premium", label: "پریمیم پیکج", icon: FaCrown }
+          ].map((tab) => {
+            const IconComponent = tab.icon;
+            return (
+              <motion.button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className={`px-8 py-4 rounded-full font-bold text-lg border transition-all duration-300 flex items-center gap-3 ${
+                  activeTab === tab.key
+                    ? "bg-green-700 text-white shadow-md"
+                    : "bg-white/80 text-green-700 border-green-700 hover:bg-green-50"
+                }`}
+              >
+                <IconComponent className="text-xl" />
+                {tab.label}
+              </motion.button>
+            );
+          })}
+        </div>
+
+        {/* Pricing Card */}
+        <div className="flex justify-center">
+          {pricingPlans[activeTab].map((plan, index) => (
+            <PricingCard key={index} plan={plan} />
+          ))}
+        </div>
+
+        {/* Additional Info */}
+        <div className="text-center mt-8 pt-6 border-t border-gray-200">
+          <p className="text-gray-600 text-lg">
+            {activeTab === "mamoli" 
+              ? "معمولی پیکج آپ کی زرعی ضروریات کے لیے بہترین شروع ہے"
+              : "پریمیم پیکج آپ کی زرعی کامیابی کو اگلے درجے تک لے جاتا ہے"
+            }
+          </p>
+        </div>
       </motion.div>
     </div>
   );

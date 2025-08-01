@@ -22,7 +22,9 @@ export default function OrderPage() {
 
   // Remove specific order
   const handleRemoveOrder = (indexToRemove) => {
+    console.log("Removed called")
     const updated = orders.filter((_, index) => index !== indexToRemove);
+    console.log(updated);
     setOrders(updated);
     localStorage.setItem("orders", JSON.stringify(updated));
   };

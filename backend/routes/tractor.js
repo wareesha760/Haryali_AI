@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { getTractors, addTractor } = require("../controllers/tractorController");
+const { getTractors, addTractor, updateTractorAvailability, upload } = require("../controllers/tractorController");
 
 router.get("/", getTractors);
-router.post("/", addTractor);
+router.post("/", upload.single("image"), addTractor);
+router.patch("/:id/availability", updateTractorAvailability);
 
 module.exports = router;

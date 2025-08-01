@@ -2,6 +2,8 @@ import React from "react";
 import { ShoppingCart } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { FaPlus } from "react-icons/fa";
+import { useAuth } from "../context/AuthContext";
 import ToolsImg from "../assets/Tools.jpeg";
 import TwineImg from "../assets/Twine.jpeg";
 import WallBagsImg from "../assets/WallBags.jpeg";
@@ -97,6 +99,7 @@ const products = [
 
 export default function Shop() {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const handleBuy = async (product) => {
     const token = localStorage.getItem("token");
@@ -236,6 +239,21 @@ export default function Shop() {
             🛒 دکان کے آرڈرز دیکھیں
           </motion.button>
         </div>
+
+        {/* Add Product Button - Only show for shop owners */}
+        {user && user.isShopOwner && (
+          <div className="text-center pt-6">
+            <motion.button
+              onClick={() => navigate("/add-product")}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-gradient-to-r from-green-400 to-lime-500 text-white px-8 py-4 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 font-bold flex items-center justify-center gap-3 mx-auto"
+            >
+              <FaPlus className="text-xl" />
+              نیا پروڈکٹ شامل کریں
+            </motion.button>
+          </div>
+        )}
       </motion.div>
     </div>
   );

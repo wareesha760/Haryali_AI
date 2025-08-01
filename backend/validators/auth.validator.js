@@ -19,6 +19,8 @@ const signupSchema = Joi.object({
     "string.max": "Password must be less than 100 characters / پاس ورڈ 100 حروف سے کم ہونا چاہیے",
     "string.empty": "Password is required / پاس ورڈ ضروری ہے",
   }),
+  isTractorOwner: Joi.boolean().optional(),
+  isShopOwner: Joi.boolean().optional(),
 });
 
 const loginSchema = Joi.object({
@@ -30,6 +32,8 @@ const loginSchema = Joi.object({
     "string.min": "Password must be at least 6 characters / پاس ورڈ کم از کم 6 حروف کا ہونا چاہیے",
     "string.empty": "Password is required / پاس ورڈ ضروری ہے",
   }),
+  isTractorOwner: Joi.boolean().optional(),
+  isShopOwner: Joi.boolean().optional(),
 });
 
 module.exports = { signupSchema, loginSchema };

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
+import { FaTractor, FaShoppingCart } from "react-icons/fa";
 import "@fontsource/noto-nastaliq-urdu";
 
 export default function Login() {
@@ -10,15 +11,25 @@ export default function Login() {
     email: "",
     phone: "",
     password: "",
+    isTractorOwner: false,
+    isShopOwner: false,
   });
 
   const { login } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setForm(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
-    const { email, password } = form;
+    const { email, password, isTractorOwner, isShopOwner } = form;
 
     if (!email || !password) {
       alert("ای میل اور پاس ورڈ ضروری ہیں");
@@ -29,7 +40,12 @@ export default function Login() {
       const response = await fetch("http://localhost:5001/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ 
+          email, 
+          password, 
+          isTractorOwner, 
+          isShopOwner 
+        }),
       });
 
       const data = await response.json();
@@ -101,35 +117,72 @@ export default function Login() {
         >
           <input
             type="text"
+            name="name"
             placeholder="نام"
             value={form.name}
-            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            onChange={handleInputChange}
             className="p-3 border border-gray-300 rounded text-right"
           />
 
           <input
             type="email"
+            name="email"
             placeholder="ای میل"
             value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
+            onChange={handleInputChange}
             className="p-3 border border-gray-300 rounded text-right"
           />
 
           <input
             type="text"
+            name="phone"
             placeholder="فون نمبر"
             value={form.phone}
-            onChange={(e) => setForm({ ...form, phone: e.target.value })}
+            onChange={handleInputChange}
             className="p-3 border border-gray-300 rounded text-right"
           />
 
           <input
             type="password"
+            name="password"
             placeholder="پاس ورڈ"
             value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            onChange={handleInputChange}
             className="p-3 border border-gray-300 rounded text-right"
           />
+
+          {/* Role Selection */}
+          <div className="space-y-3 mt-4">
+            <h3 className="text-lg font-bold text-green-700 mb-3">آپ کا رول منتخب کریں:</h3>
+            
+            <div className="flex items-center gap-3 p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+              <input
+                type="checkbox"
+                name="isTractorOwner"
+                checked={form.isTractorOwner}
+                onChange={handleInputChange}
+                className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+              />
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                <FaTractor className="text-green-600" />
+                ٹریکٹر مالک ہیں
+              </label>
+            </div>
+
+            <div className="flex items-center gap-3 p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+              <input
+                type="checkbox"
+                name="isShopOwner"
+                checked={form.isShopOwner}
+                onChange={handleInputChange}
+                className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
+              />
+              <label className="flex items-center gap-2 text-sm font-medium text-gray-700">
+                <FaShoppingCart className="text-green-600" />
+                دکان مالک ہیں
+              </label>
+            </div>
+          </div>
 
           <button
             type="submit"

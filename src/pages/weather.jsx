@@ -221,59 +221,95 @@ export default function Weather() {
 
       {/* Location Status */}
       {locationLoading && (
-        <div className="mb-8 text-center">
-          <div className="text-lg text-green-600 mb-2">📍 آپ کی لوکیشن حاصل کی جا رہی ہے...</div>
-          <div className="text-sm text-gray-600">براہ کرم انتظار کریں</div>
-        </div>
+        <motion.div
+          className="mb-8 w-full max-w-md mx-auto"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="bg-white/60 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/30 text-center">
+            <div className="text-4xl mb-4">Location</div>
+            <div className="text-xl text-green-600 mb-3 font-bold">آپ کی لوکیشن حاصل کی جا رہی ہے...</div>
+            <div className="text-sm text-gray-600">براہ کرم انتظار کریں</div>
+            <div className="mt-4">
+              <div className="w-8 h-8 border-4 border-green-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+            </div>
+          </div>
+        </motion.div>
       )}
 
       {locationError && (
-        <div className="mb-8 text-center">
-          <div className="text-lg text-red-600 mb-2">⚠️ {locationError}</div>
-          <button
-            onClick={getUserLocation}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm"
-          >
-            دوبارہ کوشش کریں
-          </button>
-        </div>
+        <motion.div
+          className="mb-8 w-full max-w-md mx-auto"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="bg-white/60 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/30 text-center">
+            <div className="text-4xl mb-4">⚠️</div>
+            <div className="text-xl text-red-600 mb-4 font-bold">{locationError}</div>
+            <button
+              onClick={getUserLocation}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full text-sm font-bold transition-all hover:scale-105"
+            >
+              دوبارہ کوشش کریں
+            </button>
+          </div>
+        </motion.div>
       )}
 
-      {/* Current Location Display */}
-      {weather && (
-        <div className="mb-4 text-center">
-          <div className="text-lg text-blue-600 mb-2">
-            📍 موجودہ لوکیشن: <span className="font-bold">{weather.location}</span>
-          </div>
-          <div className="text-sm text-gray-600">
-            اگر یہ آپ کی درست لوکیشن نہیں ہے تو نیچے شہر کا نام درج کریں
-          </div>
-        </div>
-      )}
+      {/* Current Location Display & Search Bar */}
+      <motion.div
+        className="mb-8 w-full max-w-lg mx-auto"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+      >
+        <div className="bg-white/60 backdrop-blur-xl rounded-3xl p-8 shadow-2xl border border-white/30 text-center">
+          <div className="text-4xl mb-4">Location</div>
+          
+          {weather ? (
+            <>
+              <div className="text-lg text-blue-600 mb-4">
+                موجودہ لوکیشن: <span className="font-bold text-xl">{weather.location}</span>
+              </div>
+              <div className="text-sm text-gray-600 mb-6">
+                اگر یہ آپ کی درست لوکیشن نہیں ہے تو نیچے شہر کا نام درج کریں
+              </div>
+            </>
+          ) : (
+            <div className="text-lg text-gray-600 mb-6">
+              اپنی لوکیشن کا موسم دیکھنے کے لیے شہر کا نام درج کریں
+            </div>
+          )}
 
-      {/* Search Bar */}
-      <div className="mb-8 flex flex-col items-center">
-        <input
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          placeholder="شہر درج کریں جیسے Lahore"
-          className="p-3 rounded text-black w-64 text-center mb-2"
-        />
-        <div className="flex gap-2">
-          <button
-            onClick={fetchWeather}
-            className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full shadow-lg"
-          >
-            موسم دیکھیں
-          </button>
-          <button
-            onClick={getUserLocation}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full shadow-lg"
-          >
-            📍 میری لوکیشن
-          </button>
+          {/* Search Input */}
+          <div className="mb-4">
+            <input
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              placeholder="شہر درج کریں جیسے Islamabad"
+              className="p-3 rounded-lg text-black w-full text-center border border-gray-300 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
+            />
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-3 justify-center">
+            <button
+              onClick={fetchWeather}
+              className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-full shadow-lg font-bold transition-all hover:scale-105"
+            >
+              موسم دیکھیں
+            </button>
+            <button
+              onClick={getUserLocation}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-full shadow-lg font-bold transition-all hover:scale-105"
+            >
+              📍 میری لوکیشن
+            </button>
+          </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Header */}
       <motion.div

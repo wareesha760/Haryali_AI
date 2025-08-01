@@ -33,11 +33,126 @@ const generateHourly = (baseTemp = 20) => {
 };
 
 export default function Weather() {
-  const [city, setCity] = useState("Lahore");
+  const [city, setCity] = useState("");
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [locationLoading, setLocationLoading] = useState(true);
+  const [locationError, setLocationError] = useState(null);
 
+  // ✅ Get user's current location
+  const getUserLocation = () => {
+    setLocationLoading(true);
+    setLocationError(null);
+
+    if (!navigator.geolocation) {
+      setLocationError("آپ کے ڈیوائس میں لوکیشن کی سہولت دستیاب نہیں ہے");
+      setLocationLoading(false);
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        try {
+          const { latitude, longitude } = position.coords;
+          console.log("User location:", latitude, longitude);
+          
+          // Fetch weather using coordinates
+          await fetchWeatherByCoords(latitude, longitude);
+        } catch (error) {
+          console.error("Error getting location:", error);
+          setLocationError("آپ کی لوکیشن حاصل کرنے میں مسئلہ ہوا");
+        } finally {
+          setLocationLoading(false);
+        }
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        let errorMessage = "لوکیشن حاصل کرنے میں مسئلہ ہوا";
+        
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = "براہ کرم لوکیشن کی اجازت دیں";
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = "لوکیشن کی معلومات دستیاب نہیں ہیں";
+            break;
+          case error.TIMEOUT:
+            errorMessage = "لوکیشن حاصل کرنے میں وقت ختم ہو گیا";
+            break;
+        }
+        
+        setLocationError(errorMessage);
+        setLocationLoading(false);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 30000
+      }
+    );
+  };
+
+  // ✅ Fetch weather by coordinates
+  const fetchWeatherByCoords = async (lat, lon) => {
+    setLoading(true);
+    try {
+      const res = await axios.post("http://localhost:5001/api/weather/coords", {
+        latitude: lat,
+        longitude: lon,
+      });
+      const data = res.data;
+
+      console.log("Weather data received:", data);
+
+      const weatherData = {
+        location: data.location,
+        temperature: parseFloat(data.temperature),
+        condition: data.description,
+        range: "31° / 27°",
+        hourly: generateHourly(parseFloat(data.temperature)),
+        forecast: [
+          {
+            period: "دوپہر تا شام",
+            time: "12 PM - 6 PM",
+            icon: "sunny",
+            temp: "High: 31°, Low: 28°",
+            note: "ان گھنٹوں میں بارش کا امکان ہے",
+          },
+          {
+            period: "شام تا رات",
+            time: "6 PM - 12 AM",
+            icon: "cloudy",
+            temp: "High: 30°, Low: 27°",
+            note: "موسم جزوی طور پر ابر آلود",
+          },
+          {
+            period: "رات تا صبح",
+            time: "12 AM - 6 AM",
+            icon: "sunny",
+            temp: "High: 27°, Low: 26°",
+            note: "موسم صاف رہنے کا امکان ہے",
+          },
+        ],
+      };
+
+      setWeather(weatherData);
+      setCity(data.location); // Set the detected city name
+    } catch (err) {
+      console.error("Error fetching weather by coordinates:", err);
+      setWeather(null);
+      setLocationError("موسم کی معلومات حاصل کرنے میں مسئلہ ہوا");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ✅ Fetch weather by city name (fallback)
   const fetchWeather = async () => {
+    if (!city.trim()) {
+      alert("براہ کرم شہر کا نام درج کریں");
+      return;
+    }
+
     setLoading(true);
     try {
       const res = await axios.post("http://localhost:5001/api/weather", {
@@ -85,9 +200,9 @@ export default function Weather() {
     }
   };
 
-  // Fetch on mount
+  // ✅ Auto-detect location on mount
   useEffect(() => {
-    fetchWeather();
+    getUserLocation();
   }, []);
 
   return (
@@ -104,6 +219,38 @@ export default function Weather() {
         transition={{ repeat: Infinity, duration: 6 }}
       />
 
+      {/* Location Status */}
+      {locationLoading && (
+        <div className="mb-8 text-center">
+          <div className="text-lg text-green-600 mb-2">📍 آپ کی لوکیشن حاصل کی جا رہی ہے...</div>
+          <div className="text-sm text-gray-600">براہ کرم انتظار کریں</div>
+        </div>
+      )}
+
+      {locationError && (
+        <div className="mb-8 text-center">
+          <div className="text-lg text-red-600 mb-2">⚠️ {locationError}</div>
+          <button
+            onClick={getUserLocation}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-full text-sm"
+          >
+            دوبارہ کوشش کریں
+          </button>
+        </div>
+      )}
+
+      {/* Current Location Display */}
+      {weather && (
+        <div className="mb-4 text-center">
+          <div className="text-lg text-blue-600 mb-2">
+            📍 موجودہ لوکیشن: <span className="font-bold">{weather.location}</span>
+          </div>
+          <div className="text-sm text-gray-600">
+            اگر یہ آپ کی درست لوکیشن نہیں ہے تو نیچے شہر کا نام درج کریں
+          </div>
+        </div>
+      )}
+
       {/* Search Bar */}
       <div className="mb-8 flex flex-col items-center">
         <input
@@ -112,12 +259,20 @@ export default function Weather() {
           placeholder="شہر درج کریں جیسے Lahore"
           className="p-3 rounded text-black w-64 text-center mb-2"
         />
-        <button
-          onClick={fetchWeather}
-          className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full shadow-lg"
-        >
-          موسم دیکھیں
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={fetchWeather}
+            className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-full shadow-lg"
+          >
+            موسم دیکھیں
+          </button>
+          <button
+            onClick={getUserLocation}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full shadow-lg"
+          >
+            📍 میری لوکیشن
+          </button>
+        </div>
       </div>
 
       {/* Header */}

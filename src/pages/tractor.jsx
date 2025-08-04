@@ -20,6 +20,17 @@ export default function TractorsPage() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const { user } = useAuth();
+  const [showOrderModal, setShowOrderModal] = useState(false);
+  const [selectedTractor, setSelectedTractor] = useState(null);
+  const [orderForm, setOrderForm] = useState({
+    name: "",
+    start: "",
+    end: "",
+    location: "",
+    type: "Self Pickup"
+  });
+  const [orderLoading, setOrderLoading] = useState(false);
+  const [orderSuccess, setOrderSuccess] = useState("");
 
   // Fetch tractors from backend
   const fetchTractors = async () => {
@@ -86,21 +97,57 @@ export default function TractorsPage() {
 
   const displayTractors = tractors.length > 0 ? tractors : defaultTractors;
 
-  const handleRent = async (tractor) => {
+  const handleRent = (tractor) => {
     const token = localStorage.getItem("token");
     if (!token) {
       alert("Please login to rent tractors");
       navigate("/login");
       return;
     }
+    setSelectedTractor(tractor);
+    setShowOrderModal(true);
+  };
 
-    // Navigate to order page with tractor details
-    navigate("/order", { 
-      state: { 
-        orderType: "tractor",
-        tractor: tractor 
-      } 
-    });
+  const handleOrderInput = (e) => {
+    setOrderForm({ ...orderForm, [e.target.name]: e.target.value });
+  };
+
+  const handleOrderSubmit = async (e) => {
+    e.preventDefault();
+    if (!orderForm.name || !orderForm.start || !orderForm.end || !orderForm.location) {
+      alert("تمام فیلڈز لازمی ہیں");
+      return;
+    }
+    setOrderLoading(true);
+    setOrderSuccess("");
+    const token = localStorage.getItem("token");
+    try {
+      // Try to send to backend if endpoint exists
+      const response = await fetch("http://localhost:5001/api/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          orderType: "tractor",
+          title: selectedTractor.title,
+          catClass: selectedTractor.catClass,
+          location: orderForm.location,
+          start: orderForm.start,
+          end: orderForm.end,
+          type: orderForm.type,
+        }),
+      });
+      if (!response.ok) throw new Error("Order failed");
+      setOrderSuccess("آرڈر کامیابی سے بک ہو گیا!");
+      setOrderForm({ name: "", start: "", end: "", location: "", type: "Self Pickup" });
+      setShowOrderModal(false);
+    } catch (err) {
+      alert("آرڈر بک نہیں ہو سکا، دوبارہ کوشش کریں");
+    } finally {
+      setOrderLoading(false);
+    }
   };
 
   const getTractorImage = (catClass) => {
@@ -273,6 +320,75 @@ export default function TractorsPage() {
             </div>
           )}
         </motion.div>
+      )}
+
+      {/* Order Modal */}
+      {showOrderModal && selectedTractor && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white text-right p-6 rounded-lg w-96 relative">
+            <button
+              onClick={() => setShowOrderModal(false)}
+              className="absolute top-2 left-2 text-gray-500 hover:text-black text-lg"
+            >
+              ✖
+            </button>
+            <h2 className="text-xl font-bold text-green-700 mb-4">ٹریکٹر آرڈر کریں</h2>
+            <form onSubmit={handleOrderSubmit} className="space-y-3">
+              <label className="block mb-1 text-black">نام</label>
+              <input
+                name="name"
+                type="text"
+                value={orderForm.name}
+                onChange={handleOrderInput}
+                className="w-full border p-2 mb-2 text-black rounded text-right"
+                placeholder="آپ کا نام"
+              />
+              <label className="block mb-1 text-black">شروع ہونے کی تاریخ</label>
+              <input
+                name="start"
+                type="date"
+                value={orderForm.start}
+                onChange={handleOrderInput}
+                className="w-full border p-2 mb-2 text-black rounded text-right"
+              />
+              <label className="block mb-1 text-black">ختم ہونے کی تاریخ</label>
+              <input
+                name="end"
+                type="date"
+                value={orderForm.end}
+                onChange={handleOrderInput}
+                className="w-full border p-2 mb-2 text-black rounded text-right"
+              />
+              <label className="block mb-1 text-black">مقام</label>
+              <input
+                name="location"
+                type="text"
+                value={orderForm.location}
+                onChange={handleOrderInput}
+                className="w-full border p-2 mb-2 text-black rounded text-right"
+                placeholder="جگہ/پتہ"
+              />
+              <label className="block mb-1 text-black">فراہم کرنے کا طریقہ</label>
+              <select
+                name="type"
+                value={orderForm.type}
+                onChange={handleOrderInput}
+                className="w-full border p-2 mb-2 text-black rounded text-right"
+              >
+                <option value="Self Pickup">Self Pickup</option>
+                <option value="Home Delivery">Home Delivery</option>
+              </select>
+              <button
+                type="submit"
+                disabled={orderLoading}
+                className="w-full bg-gradient-to-r from-green-500 to-lime-500 text-white py-2 rounded mt-2 font-bold hover:shadow-lg transition"
+              >
+                {orderLoading ? "آرڈر ہو رہا ہے..." : "آرڈر کریں"}
+              </button>
+            </form>
+            {orderSuccess && <div className="text-green-600 mt-3">{orderSuccess}</div>}
+          </div>
+        </div>
       )}
     </div>
   );

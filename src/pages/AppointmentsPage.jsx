@@ -72,7 +72,7 @@ export default function AppointmentsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center mb-10justify-center">
         <div className="text-xl text-green-600">Loading appointments...</div>
       </div>
     );

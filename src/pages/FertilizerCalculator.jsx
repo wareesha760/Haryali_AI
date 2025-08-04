@@ -93,7 +93,7 @@ export default function FertilizerCalculator() {
   }, [cropType]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center pt-40 justify-center bg-cover bg-center">
+    <div className="min-h-screen flex flex-col items-center pt-40 mb-10 justify-center bg-cover bg-center">
       
       {/* ToastContainer for notifications */}
       <ToastContainer position="top-center" autoClose={3000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={true} pauseOnFocusLoss draggable pauseOnHover />

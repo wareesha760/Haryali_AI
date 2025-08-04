@@ -66,7 +66,7 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center pt-40 px-6 relative font-[Noto Nastaliq Urdu]">
+    <div className="min-h-screen flex flex-col items-center pt-40 px-6  mb-10 relative font-[Noto Nastaliq Urdu]">
       {/* Floating Shapes */}
       <motion.div
         className="absolute top-10 left-20 w-28 h-28 bg-green-300 rounded-full blur-3xl opacity-20"

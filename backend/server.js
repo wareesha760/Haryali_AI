@@ -38,6 +38,7 @@ const orderRoutes = require("./routes/order");
 const appointmentRoutes = require("./routes/appointments");
 const machineryRoutes = require("./routes/machinery");
 const productRoutes = require("./routes/products");
+const fertilizerRoutes = require("./routes/fertilizer");
 
 // 🔗 Connect to MongoDB
 mongoose
@@ -57,6 +58,7 @@ app.use("/api/orders", orderRoutes); // ✅ Use Order Routes
 app.use("/api/appointments", appointmentRoutes); // ✅ Use Appointment Routes
 app.use("/api/machinery", machineryRoutes); // ✅ Use Machinery Routes
 app.use("/api/products", productRoutes); // ✅ Use Product Routes
+app.use("/api/fertilizer", fertilizerRoutes); // ✅ Use Fertilizer Routes
 
 // Serve uploaded files
 app.use("/uploads", express.static("uploads"));

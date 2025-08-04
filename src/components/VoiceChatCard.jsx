@@ -21,6 +21,22 @@ const VoiceChatCard = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  // Load voices for TTS
+  useEffect(() => {
+    const loadVoices = () => {
+      const voices = window.speechSynthesis.getVoices();
+      console.log('🎤 Available voices:', voices.map(v => `${v.name} (${v.lang})`));
+    };
+
+    // Load voices immediately if available
+    loadVoices();
+    
+    // Load voices when they become available
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+  }, []);
+
   // Initialize Web Speech API - Fixed dependency issue
   useEffect(() => {
     if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
@@ -174,6 +190,8 @@ const VoiceChatCard = () => {
         userInput: voiceText,
       });
 
+      console.log('📡 Backend response:', res.data);
+
       const botReply = res.data.reply || "I couldn't understand. Please try again.";
 
       // Add bot response
@@ -183,28 +201,72 @@ const VoiceChatCard = () => {
       speakText(botReply);
 
     } catch (err) {
-      console.error("❌ API Error:", err.message);
-      const errorMessage = "Sorry, I couldn't process your request. Please try again.";
+      console.error("❌ API Error:", err.response?.data || err.message);
+      
+      let errorMessage = "Sorry, I couldn't process your request. Please try again.";
+      
+      // Handle specific API errors
+      if (err.response?.data?.error) {
+        if (err.response.data.error.includes("OpenAI API")) {
+          errorMessage = "AI service is not configured. Please contact the administrator.";
+        } else if (err.response.data.error.includes("authentication")) {
+          errorMessage = "AI service authentication failed. Please try again later.";
+        } else {
+          errorMessage = err.response.data.error;
+        }
+      }
+      
       setMessages((prev) => [...prev, { type: "bot", text: errorMessage }]);
       speakText(errorMessage);
     }
   };
 
   const speakText = (text) => {
-    if (synthesisRef.current) {
-      // Stop any current speech
-      synthesisRef.current.cancel();
+    if ('speechSynthesis' in window) {
+      // Cancel any ongoing speech
+      window.speechSynthesis.cancel();
       
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US'; // Can be changed to 'ur-PK' for Urdu
+      const utterance = new window.SpeechSynthesisUtterance(text);
+      
+      // Check if text contains Urdu characters
+      const hasUrdu = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/.test(text);
+      
+      if (hasUrdu) {
+        // For Urdu text, try multiple language codes
+        const urduVoices = window.speechSynthesis.getVoices().filter(voice => 
+          voice.lang.includes('ur') || voice.lang.includes('hi') || voice.lang.includes('ar')
+        );
+        
+        if (urduVoices.length > 0) {
+          utterance.voice = urduVoices[0];
+          utterance.lang = urduVoices[0].lang;
+        } else {
+          // Fallback to English if no Urdu voice available
+          utterance.lang = 'en-US';
+        }
+      } else {
+        utterance.lang = 'en-US';
+      }
+      
       utterance.rate = 0.9;
-      utterance.pitch = 1;
-      utterance.volume = 0.8;
-      synthesisRef.current.speak(utterance);
-      console.log('🔊 Speaking:', text);
+      utterance.pitch = 1.0;
+      utterance.volume = 1.0;
+      
+      // Add event listeners for debugging
+      utterance.onstart = () => console.log('🔊 TTS started:', text.substring(0, 50));
+      utterance.onend = () => console.log('🔊 TTS ended');
+      utterance.onerror = (event) => console.error('❌ TTS error:', event.error);
+      
+      window.speechSynthesis.speak(utterance);
     } else {
-      console.log('❌ Speech synthesis not available');
+      console.error('❌ Speech synthesis not supported');
     }
+  };
+
+  // Test TTS function
+  const testTTS = () => {
+    console.log('🧪 Testing TTS...');
+    speakText('Hello, this is a test message. Can you hear me?');
   };
 
   const handleSendText = async () => {
@@ -221,6 +283,8 @@ const VoiceChatCard = () => {
         userInput: userMessage,
       });
 
+      console.log('📡 Backend response:', res.data);
+
       const botReply = res.data.reply || "I couldn't understand. Please try again.";
 
       // Add bot response
@@ -230,8 +294,21 @@ const VoiceChatCard = () => {
       speakText(botReply);
 
     } catch (err) {
-      console.error("❌ API Error:", err.message);
-      const errorMessage = "Sorry, I couldn't process your request. Please try again.";
+      console.error("❌ API Error:", err.response?.data || err.message);
+      
+      let errorMessage = "Sorry, I couldn't process your request. Please try again.";
+      
+      // Handle specific API errors
+      if (err.response?.data?.error) {
+        if (err.response.data.error.includes("OpenAI API")) {
+          errorMessage = "AI service is not configured. Please contact the administrator.";
+        } else if (err.response.data.error.includes("authentication")) {
+          errorMessage = "AI service authentication failed. Please try again later.";
+        } else {
+          errorMessage = err.response.data.error;
+        }
+      }
+      
       setMessages((prev) => [...prev, { type: "bot", text: errorMessage }]);
       speakText(errorMessage);
     }
@@ -520,8 +597,24 @@ const VoiceChatCard = () => {
             className="flex-1 p-3 rounded-full bg-gray-100 border focus:outline-none focus:ring-2 focus:ring-green-500 text-right"
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter') {
+                handleSendText();
+              }
+            }}
             onKeyDown={(e) => e.key === "Enter" && handleSendText()}
           />
+          
+          {/* Test TTS Button */}
+          <motion.button
+            onClick={testTTS}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="p-2 bg-purple-600 text-white rounded-full hover:bg-purple-700 transition-colors"
+            title="Test TTS"
+          >
+            🔊
+          </motion.button>
           <motion.button
             onClick={handleSendText}
             whileHover={{ scale: 1.05 }}

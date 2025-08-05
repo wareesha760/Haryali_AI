@@ -1,5 +1,5 @@
 import React from "react";
-import Shop from "./shop"; 
+import Shop from "./shop";   // Importing the Shop component 
 import { motion } from "framer-motion";
 import expertImg from "../assets/expert.png";
 import weatherImg from "../assets/weather1.jpg";
@@ -7,10 +7,11 @@ import tractorImg from "../assets/tractor.png";
 import calendarImg from "../assets/calender.jpg";
 import micImg from "../assets/mic.png";
 import calcuImg from "../assets/calcu.jpeg";
+import { useAuth } from "../context/AuthContext";
 
 const cardData = [
   { 
-    title: "اے آئی ماہر سے فوری مشورہ", 
+    title: "👑اے آئی ماہر سے فوری مشورہ ", 
     image: micImg, // ✅ use imported variable
     description: "فصل لگانے کا وقت، کھاد کی مقدار ہر سوال کا فوری اور قابلِ بھروسا جواب- اپنا سوال بھیجیں اور جدید زرعی رہنمائی حاصل کریں۔", 
     url: "/voice" 
@@ -28,7 +29,7 @@ const cardData = [
     url: "/tractor" 
   },
   { 
-    title: "سمارٹ کسان پلانر", 
+    title: " 👑سمارٹ کسان پلانر", 
     image: calendarImg, 
     description: "ایک ذہین زراعتی فیچر ہے جو کسانوں کو ان کی زمین، موسم، پانی، اور علاقے کے لحاظ سے بہترین فصل کی منصوبہ بندی میں مدد فراہم کرتا ہے۔",
     url:"/planner" 
@@ -40,7 +41,7 @@ const cardData = [
     url: "/fertilizer" 
   },
   { 
-    title: "ماہرِ زراعت سے مشورہ", 
+    title: "👑 ماہرِ زراعت سے مشورہ", 
     image: expertImg, 
     description: "-فصل، بیماری یا کھاد سے متعلق سوال ہے؟ ابھی کال یا میسج پر ماہرین سے رہنمائی حاصل کریں", 
     url: "/advisor" 
@@ -49,6 +50,8 @@ const cardData = [
 
 
 function ShopRow() {
+  const { user } = useAuth();
+  const subscription = user?.subscription || null;
   return (
     <div className="flex justify-center items-center py-16 px-4">
       {/* 🌟 Outer Glass Card */}
@@ -87,6 +90,7 @@ function ShopRow() {
               image={card.image}
               description={card.description}
               url={card.url}
+              subscription={subscription}
             />
           ))}
         </div>

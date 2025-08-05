@@ -25,7 +25,8 @@ exports.signup = async (req, res) => {
       phone, 
       password, 
       isTractorOwner: isTractorOwner || false,
-      isShopOwner: isShopOwner || false
+      isShopOwner: isShopOwner || false,
+      subscription: null // Default to no subscription
     });
     await user.save();
 
@@ -41,7 +42,8 @@ exports.signup = async (req, res) => {
         email, 
         phone,
         isTractorOwner: user.isTractorOwner,
-        isShopOwner: user.isShopOwner
+        isShopOwner: user.isShopOwner,
+        subscription: user.subscription
       },
     });
   } catch (error) {
@@ -92,10 +94,44 @@ exports.login = async (req, res) => {
         email: user.email, 
         phone: user.phone,
         isTractorOwner: user.isTractorOwner,
-        isShopOwner: user.isShopOwner
+        isShopOwner: user.isShopOwner,
+        subscription: user.subscription
       },
     });
   } catch (error) {
     return res.status(500).json({ message: "Server error / سرور میں خرابی ہے", error });
+  }
+};
+
+// UPDATE SUBSCRIPTION
+exports.updateSubscription = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { subscription } = req.body;
+    if (!["mamoli", "premium", null].includes(subscription)) {
+      return res.status(400).json({ message: "Invalid subscription type" });
+    }
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { subscription },
+      { new: true }
+    );
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    return res.status(200).json({
+      message: "Subscription updated successfully",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        isTractorOwner: user.isTractorOwner,
+        isShopOwner: user.isShopOwner,
+        subscription: user.subscription
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Server error", error });
   }
 };

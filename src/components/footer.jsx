@@ -20,7 +20,7 @@ export default function Footer() {
             {/* Logo + Title */}
             <div className="flex items-center gap-3">
               <img src={logoImg} alt="KisaanBot Logo" className="w-14 h-14" />
-              <h1 className="text-2xl font-semibold">KisaanBot</h1>
+              <h1 className="text-2xl font-semibold">Haryali AI</h1>
             </div>
 
             {/* Social Icons */}
@@ -52,7 +52,7 @@ export default function Footer() {
             <div className="flex flex-wrap justify-center gap-6 text-xs text-black/60">
               <div className="flex items-center gap-2">
                 <FaEnvelope className="text-green-600" />
-                <span>info@kisaanbot.com</span>
+                <span>info@HaryaliAI.com</span>
               </div>
               <div className="flex items-center gap-2">
                 <FaPhone className="text-green-600" />
@@ -68,7 +68,7 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="mt-4 text-center text-xs text-black/50">
-          © 2025 KisaanBot. All rights reserved.
+          © 2025 Haryali AI. All rights reserved.
         </div>
       </footer>
     </>

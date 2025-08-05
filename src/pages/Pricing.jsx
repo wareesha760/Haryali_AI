@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { FaCrown, FaLeaf } from "react-icons/fa";
 import "@fontsource/noto-nastaliq-urdu";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const pricingPlans = {
   mamoli: [
@@ -40,7 +42,7 @@ const pricingPlans = {
   ],
 };
 
-const PricingCard = ({ plan }) => {
+const PricingCard = ({ plan, onSubscribe }) => {
   const IconComponent = plan.icon;
   
   return (
@@ -80,6 +82,7 @@ const PricingCard = ({ plan }) => {
             ? "bg-white text-green-700 hover:bg-green-200"
             : "bg-transparent text-green-700 border-green-700 hover:bg-green-100"
         }`}
+        onClick={onSubscribe}
       >
         سبسکرائب کریں
       </button>
@@ -102,6 +105,39 @@ const PricingCard = ({ plan }) => {
 
 export default function Pricing() {
   const [activeTab, setActiveTab] = useState("mamoli");
+  const { user, updateSubscription } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubscribe = async (planKey) => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+    try {
+      const token = localStorage.getItem("token");
+      const res = await fetch("http://localhost:5001/api/auth/subscribe", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ subscription: planKey }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        updateSubscription(planKey);
+        if (planKey === "mamoli") {
+          navigate("/");
+        } else if (planKey === "premium") {
+          navigate("/");
+        }
+      } else {
+        alert(data.message || "Subscription failed");
+      }
+    } catch (err) {
+      alert("Subscription failed");
+    }
+  };
 
   return (
     <div className="min-h-screen pt-40 px-6 relative font-[Noto Nastaliq Urdu] flex flex-col items-center">
@@ -175,7 +211,11 @@ export default function Pricing() {
         {/* Pricing Card */}
         <div className="flex justify-center">
           {pricingPlans[activeTab].map((plan, index) => (
-            <PricingCard key={index} plan={plan} />
+            <PricingCard
+              key={index}
+              plan={plan}
+              onSubscribe={() => handleSubscribe(activeTab)}
+            />
           ))}
         </div>
 

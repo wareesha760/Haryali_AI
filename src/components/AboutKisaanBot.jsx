@@ -51,7 +51,7 @@ function AboutKisaanBot() {
         >
           <motion.img
   src={logoImg}
-  alt="KisaanBot Logo"
+  alt="Haryali ai Logo"
   className="w-64 md:w-80 lg:w-[22rem]"
   animate={{ scale: [1, 1.08, 1] }}
   transition={{ repeat: Infinity, duration: 2 }}
@@ -68,7 +68,7 @@ function AboutKisaanBot() {
           {/* Premium Heading with Animated Underline */}
           <div className="relative inline-block mb-4">
             <h2 className="text-6xl font-extrabold text-gray-900 tracking-tight">
-              KisaanBot
+              Haryali AI
             </h2>
             <motion.div
               className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-green-600 to-lime-400 rounded-full"
@@ -80,19 +80,15 @@ function AboutKisaanBot() {
 
           {/* Urdu Subtitle */}
           <h3 className="text-4xl font-semibold bg-gradient-to-r from-green-700 to-lime-400 bg-clip-text text-transparent mb-4">
-            کسان کی ڈیجیٹل آواز
+            سمجھدار کسان، ہرا بھرا میدان
           </h3>
 
           {/* Paragraph */}
           <p className="text-lg text-gray-700 text-right leading-relaxed">
-            کسان بوٹ ایک جدید پلیٹ فارم ہے جو پاکستان کے کسانوں کو جدید ٹیکنالوجی
-            اور معلومات فراہم کرتا ہے تاکہ وہ اپنی فصلوں کی پیداوار میں اضافہ کر
-            سکیں۔ یہ پلیٹ فارم موسمی حالات، زرعی مشینری کرایہ، بیجوں کی معلومات
-            اور زرعی مشوروں کے لیے ایک ہی جگہ پر تمام سہولیات فراہم کرتا ہے۔
-            کسان بوٹ کا مقصد دیہی معیشت کو مضبوط بنانا، کسانوں کی آمدنی میں اضافہ
-            کرنا اور جدید زرعی تکنیک کے ذریعے ملک میں خوراک کی پیداوار کو بہتر
-            بنانا ہے۔
-          </p>
+  ہریالی اے آئی ایک جدید زرعی پلیٹ فارم ہے جو پاکستان کے کسانوں کو مصنوعی ذہانت پر مبنی ٹیکنالوجی اور معلومات فراہم کرتا ہے تاکہ وہ اپنی فصلوں کی پیداوار، معیار اور منافع میں اضافہ کر سکیں۔ یہ پلیٹ فارم موسمی حالات کی پیشن گوئی، زمین کی جانچ، بیجوں کی درست سفارش، زرعی مشینری کے کرائے اور جدید زرعی مشوروں جیسے تمام حل ایک ہی جگہ پر فراہم کرتا ہے۔ ہریالی اے آئی کا مقصد دیہی معیشت کو ڈیجیٹل طور پر مضبوط بنانا، کسانوں کی آمدنی میں اضافہ کرنا اور پائیدار زرعی طریقوں کے ذریعے پاکستان کو خوراک میں خود کفیل بنانا ہے۔
+</p>
+
+
         </motion.div>
       </motion.div>
       </div>

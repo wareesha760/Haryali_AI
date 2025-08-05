@@ -42,7 +42,7 @@ const Navbar = () => {
         <Link to="/" className="flex items-center gap-3">
           <img
   src={logoImg}
-  alt="KisaanBot Logo"
+  alt="Haryali AI Logo"
   className={`transition-all duration-500 ${
     isScrolled ? "h-14" : "h-20"
   }`}
@@ -52,7 +52,7 @@ const Navbar = () => {
               isScrolled ? "text-2xl" : "text-3xl"
             }`}
           >
-            KisaanBot
+            Haryali AI
           </span>
         </Link>
 

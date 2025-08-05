@@ -28,7 +28,7 @@ const askChatGPT = async (req, res) => {
           {
             parts: [
               {
-                text: `You are an expert agricultural assistant specifically for Pakistani farmers. Provide location-specific advice for Pakistan's climate, soil conditions, and agricultural practices.
+                text: `You are an expert agricultural assistant specifically for Pakistani farmers. Provide location-specific advice 2-3 lines for Pakistan's climate, soil conditions, and agricultural practices.
 
 CONTEXT FOR PAKISTAN:
 - Climate: Semi-arid to arid with hot summers and cool winters
@@ -79,10 +79,6 @@ User question: ${userInput}`
   const agriculturalResponses = {
     // Wheat related queries - Pakistan specific
     "wheat": {
-      urdu: "پاکستان میں گندم کی کاشت نومبر سے دسمبر میں کریں۔ پنجاب اور سندھ میں نومبر، خیبر پختونخوا میں دسمبر۔ NPK کھاد 50-25-25 کلوگرام فی ایکڑ استعمال کریں۔",
-      english: "Plant wheat in Pakistan from November to December. November in Punjab and Sindh, December in Khyber Pakhtunkhwa. Use NPK fertilizer 50-25-25 kg per acre."
-    },
-    "gandum": {
       urdu: "پاکستان میں گندم کی کاشت نومبر سے دسمبر میں کریں۔ پنجاب اور سندھ میں نومبر، خیبر پختونخوا میں دسمبر۔ NPK کھاد 50-25-25 کلوگرام فی ایکڑ استعمال کریں۔",
       english: "Plant wheat in Pakistan from November to December. November in Punjab and Sindh, December in Khyber Pakhtunkhwa. Use NPK fertilizer 50-25-25 kg per acre."
     },
@@ -160,10 +156,6 @@ User question: ${userInput}`
       urdu: "پاکستان میں پانی کی بچت کے لیے ڈرپ ایریگیشن استعمال کریں۔ نہری پانی اور ٹیوب ویل کا مناسب استعمال کریں۔ صبح یا شام کو پانی دیں۔",
       english: "Use drip irrigation to save water in Pakistan. Use canal water and tube wells properly. Water in morning or evening."
     },
-    "paani": {
-      urdu: "پاکستان میں پانی کی بچت کے لیے ڈرپ ایریگیشن استعمال کریں۔ نہری پانی اور ٹیوب ویل کا مناسب استعمال کریں۔ صبح یا شام کو پانی دیں۔",
-      english: "Use drip irrigation to save water in Pakistan. Use canal water and tube wells properly. Water in morning or evening."
-    },
     
     // Fertilizer queries - Pakistan specific
     "fertilizer": {
@@ -234,16 +226,7 @@ User question: ${userInput}`
       urdu: "فصل کی قیمت مارکیٹ میں چیک کریں۔ مناسب وقت پر فروخت کریں۔",
       english: "Check crop prices in the market. Sell at the appropriate time."
     },
-    
-    // Time-related queries
-    "kab": {
-      urdu: "وقت کے بارے میں پوچھ رہے ہیں۔ براہ کرم بتائیں کہ کس کام کا وقت جاننا چاہتے ہیں۔",
-      english: "You're asking about timing. Please tell me what work's timing you want to know."
-    },
-    "کب": {
-      urdu: "وقت کے بارے میں پوچھ رہے ہیں۔ براہ کرم بتائیں کہ کس کام کا وقت جاننا چاہتے ہیں۔",
-      english: "You're asking about timing. Please tell me what work's timing you want to know."
-    },
+  
     
     // Planting queries
     "ugani": {
@@ -361,7 +344,7 @@ const handleVoiceQuery = async (req, res) => {
           {
             parts: [
               {
-                text: `You are an agricultural voice assistant specifically for Pakistani farmers. Provide location-specific advice for Pakistan's climate and agricultural practices.
+                text: `You are an agricultural voice assistant specifically for Pakistani farmers. Provide location-specific advice in 2 lines for Pakistan's climate and agricultural practices.
 
 CONTEXT FOR PAKISTAN:
 - Climate: Semi-arid to arid with hot summers and cool winters
@@ -373,7 +356,7 @@ CONTEXT FOR PAKISTAN:
 - Common pests: Cotton bollworm, wheat aphid, rice stem borer
 - Fertilizer types: NPK, Urea, DAP commonly used
 
-Provide specific, actionable answers in ${language === 'ur' ? 'Urdu' : 'English'} with clear, spoken-friendly language. Focus on Pakistan's farming conditions, local crop varieties, regional weather patterns, and practical solutions for Pakistani farmers. Keep responses short but specific to the question asked. Make responses audible and clear.
+Provide specific 2 lines, actionable answers in ${language === 'ur' ? 'Urdu' : 'English'} with clear, spoken-friendly language. Focus on Pakistan's farming conditions, local crop varieties, regional weather patterns, and practical solutions for Pakistani farmers. Keep responses short but specific to the question asked. Make responses audible and clear.
 
 User question: ${userInput}`
               }

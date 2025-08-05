@@ -9,6 +9,11 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: true },
     isTractorOwner: { type: Boolean, default: false },
     isShopOwner: { type: Boolean, default: false },
+    subscription: {
+      type: String,
+      enum: ["mamoli", "premium", null],
+      default: null
+    }
   },
   { timestamps: true }
 );

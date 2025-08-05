@@ -1,24 +1,11 @@
 const axios = require('axios');
 
-// Multiple reliable free AI API options
-const AI_APIS = [
-  {
-    name: 'Hugging Face Router',
-    url: 'https://router.huggingface.co/v1/chat/completions',
-    model: 'moonshotai/Kimi-K2-Instruct',
-    token: process.env.HF_TOKEN || 'hf_demo'
-  },
-  {
-    name: 'Hugging Face Inference',
-    url: 'https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium',
-    token: process.env.HF_TOKEN || 'hf_demo'
-  },
-  {
-    name: 'Hugging Face Text Generation',
-    url: 'https://api-inference.huggingface.co/models/gpt2',
-    token: process.env.HF_TOKEN || 'hf_demo'
-  }
-];
+// Gemini API configuration
+const GEMINI_API = {
+  name: 'Google Gemini',
+  url: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent',
+  token: 'AIzaSyB0Qd606zk3kKSq4aoPSZjDWXteTWVCTig'
+};
 
 const askChatGPT = async (req, res) => {
   const { userInput } = req.body;
@@ -30,117 +17,98 @@ const askChatGPT = async (req, res) => {
     return res.status(400).json({ error: "No user input provided." });
   }
 
-  // Try multiple AI APIs in sequence
-  for (let i = 0; i < AI_APIS.length; i++) {
-    const api = AI_APIS[i];
-    try {
-      console.log(`🤖 Trying ${api.name} API...`);
-      
-      let response;
-      if (api.name === 'Hugging Face Router') {
-        response = await axios.post(
-          api.url,
+  // Try Gemini API
+  try {
+    console.log(`🤖 Trying ${GEMINI_API.name} API...`);
+    
+    const response = await axios.post(
+      `${GEMINI_API.url}?key=${GEMINI_API.token}`,
+      {
+        contents: [
           {
-            model: api.model,
-        messages: [
-                    {
-            role: "system", 
-                content: "You are an expert agricultural assistant for Pakistani farmers. Provide specific, actionable answers in English for better voice compatibility. Focus on farming, crops, weather, pests, water management, and agricultural practices. Keep responses clear and audible."
-          },
-          { 
-            role: "user", 
-                content: userInput
+            parts: [
+              {
+                text: `You are an expert agricultural assistant specifically for Pakistani farmers. Provide location-specific advice for Pakistan's climate, soil conditions, and agricultural practices.
+
+CONTEXT FOR PAKISTAN:
+- Climate: Semi-arid to arid with hot summers and cool winters
+- Major growing regions: Punjab, Sindh, Khyber Pakhtunkhwa, Balochistan
+- Soil types: Alluvial soils in Punjab/Sindh, clay loam in KP, sandy in Balochistan
+- Water sources: Canal irrigation, tube wells, rainfall (monsoon)
+- Major crops: Wheat, Rice, Cotton, Sugarcane, Maize, Pulses
+- Growing seasons: Rabi (Oct-Mar), Kharif (Apr-Sep)
+- Common pests: Cotton bollworm, wheat aphid, rice stem borer
+- Fertilizer types: NPK, Urea, DAP commonly used
+
+Provide specific, actionable answers in English for better voice compatibility. Focus on Pakistan's farming conditions, local crop varieties, regional weather patterns, and practical solutions for Pakistani farmers. Keep responses clear and audible.
+
+User question: ${userInput}`
               }
-            ],
-            max_tokens: 300,
-            temperature: 0.7
-          },
-          {
-            headers: {
-              'Authorization': `Bearer ${api.token}`,
-              'Content-Type': 'application/json'
-            },
-            timeout: 10000
+            ]
           }
-        );
-      } else {
-        // Hugging Face Inference APIs
-        response = await axios.post(
-          api.url,
-          {
-            inputs: `Farmer: ${userInput}\nAgricultural Assistant:`,
-            parameters: {
-              max_length: 200,
-              temperature: 0.7,
-              do_sample: true
-            }
+        ],
+        generationConfig: {
+          maxOutputTokens: 300,
+          temperature: 0.7,
+          topP: 0.8,
+          topK: 40
+        }
       },
       {
         headers: {
-              'Authorization': `Bearer ${api.token}`,
           'Content-Type': 'application/json'
-            },
-            timeout: 8000
-          }
-        );
+        },
+        timeout: 15000
       }
+    );
 
-      let aiReply = '';
-      if (api.name === 'Hugging Face Router') {
-        if (response.data && response.data.choices && response.data.choices[0] && response.data.choices[0].message) {
-          aiReply = response.data.choices[0].message.content;
-        }
-      } else {
-        // Hugging Face Inference
-        if (response.data && response.data[0] && response.data[0].generated_text) {
-          aiReply = response.data[0].generated_text.replace('Agricultural Assistant:', '').trim();
-        }
-      }
-
-      if (aiReply && aiReply.length > 10) {
-        console.log(`✅ ${api.name} API Success:`, aiReply);
-        return res.status(200).json({ reply: aiReply, ai: true, api: api.name });
-      }
-  } catch (error) {
-      console.log(`❌ ${api.name} API failed:`, error.message);
-      continue; // Try next API
+    let aiReply = '';
+    if (response.data && response.data.candidates && response.data.candidates[0] && response.data.candidates[0].content && response.data.candidates[0].content.parts && response.data.candidates[0].content.parts[0]) {
+      aiReply = response.data.candidates[0].content.parts[0].text;
     }
+
+    if (aiReply && aiReply.length > 10) {
+      console.log(`✅ ${GEMINI_API.name} API Success:`, aiReply);
+      return res.status(200).json({ reply: aiReply, ai: true, api: GEMINI_API.name });
+    }
+  } catch (error) {
+    console.log(`❌ ${GEMINI_API.name} API failed:`, error.message);
   }
 
   // Enhanced fallback responses for agricultural queries with bilingual support
   const agriculturalResponses = {
-    // Wheat related queries
+    // Wheat related queries - Pakistan specific
     "wheat": {
-      urdu: "گندم کی کاشت کے لیے نومبر سے دسمبر کا وقت بہترین ہے۔ پانی کی مناسب مقدار دیں اور کھاد کا استعمال کریں۔",
-      english: "The best time for wheat cultivation is from November to December. Provide adequate water and use fertilizers."
+      urdu: "پاکستان میں گندم کی کاشت نومبر سے دسمبر میں کریں۔ پنجاب اور سندھ میں نومبر، خیبر پختونخوا میں دسمبر۔ NPK کھاد 50-25-25 کلوگرام فی ایکڑ استعمال کریں۔",
+      english: "Plant wheat in Pakistan from November to December. November in Punjab and Sindh, December in Khyber Pakhtunkhwa. Use NPK fertilizer 50-25-25 kg per acre."
     },
     "gandum": {
-      urdu: "گندم کی کاشت کے لیے نومبر سے دسمبر کا وقت بہترین ہے۔ پانی کی مناسب مقدار دیں اور کھاد کا استعمال کریں۔",
-      english: "The best time for wheat cultivation is from November to December. Provide adequate water and use fertilizers."
+      urdu: "پاکستان میں گندم کی کاشت نومبر سے دسمبر میں کریں۔ پنجاب اور سندھ میں نومبر، خیبر پختونخوا میں دسمبر۔ NPK کھاد 50-25-25 کلوگرام فی ایکڑ استعمال کریں۔",
+      english: "Plant wheat in Pakistan from November to December. November in Punjab and Sindh, December in Khyber Pakhtunkhwa. Use NPK fertilizer 50-25-25 kg per acre."
     },
     "گندم": {
-      urdu: "گندم کی کاشت کے لیے نومبر سے دسمبر کا وقت بہترین ہے۔ پانی کی مناسب مقدار دیں اور کھاد کا استعمال کریں۔",
-      english: "The best time for wheat cultivation is from November to December. Provide adequate water and use fertilizers."
+      urdu: "پاکستان میں گندم کی کاشت نومبر سے دسمبر میں کریں۔ پنجاب اور سندھ میں نومبر، خیبر پختونخوا میں دسمبر۔ NPK کھاد 50-25-25 کلوگرام فی ایکڑ استعمال کریں۔",
+      english: "Plant wheat in Pakistan from November to December. November in Punjab and Sindh, December in Khyber Pakhtunkhwa. Use NPK fertilizer 50-25-25 kg per acre."
     },
     
-    // Rice related queries
+    // Rice related queries - Pakistan specific
     "rice": {
-      urdu: "چاول کی کاشت کے لیے مئی سے جون کا وقت مناسب ہے۔ پانی کی زیادہ مقدار کی ضرورت ہوتی ہے۔",
-      english: "The suitable time for rice cultivation is from May to June. It requires a large amount of water."
+      urdu: "پاکستان میں چاول کی کاشت مئی سے جون میں کریں۔ سندھ میں مئی، پنجاب میں جون۔ پانی کی زیادہ مقدار دیں، ڈرپ ایریگیشن استعمال کریں۔",
+      english: "Plant rice in Pakistan from May to June. May in Sindh, June in Punjab. Provide plenty of water, use drip irrigation."
     },
     "چاول": {
-      urdu: "چاول کی کاشت کے لیے مئی سے جون کا وقت مناسب ہے۔ پانی کی زیادہ مقدار کی ضرورت ہوتی ہے۔",
-      english: "The suitable time for rice cultivation is from May to June. It requires a large amount of water."
+      urdu: "پاکستان میں چاول کی کاشت مئی سے جون میں کریں۔ سندھ میں مئی، پنجاب میں جون۔ پانی کی زیادہ مقدار دیں، ڈرپ ایریگیشن استعمال کریں۔",
+      english: "Plant rice in Pakistan from May to June. May in Sindh, June in Punjab. Provide plenty of water, use drip irrigation."
     },
     
-    // Cotton related queries
+    // Cotton related queries - Pakistan specific
     "cotton": {
-      urdu: "کپاس کی کاشت فروری سے مارچ میں کریں۔ کیڑوں سے بچاؤ کے لیے مناسب دوائی کا استعمال کریں۔",
-      english: "Plant cotton from February to March. Use appropriate pesticides for pest control."
+      urdu: "پاکستان میں کپاس کی کاشت فروری سے مارچ میں کریں۔ سندھ میں فروری، پنجاب میں مارچ۔ کپاس کے کیڑے سے بچاؤ کے لیے مناسب دوائی کا استعمال کریں۔",
+      english: "Plant cotton in Pakistan from February to March. February in Sindh, March in Punjab. Use appropriate pesticides for cotton bollworm control."
     },
     "کپاس": {
-      urdu: "کپاس کی کاشت فروری سے مارچ میں کریں۔ کیڑوں سے بچاؤ کے لیے مناسب دوائی کا استعمال کریں۔",
-      english: "Plant cotton from February to March. Use appropriate pesticides for pest control."
+      urdu: "پاکستان میں کپاس کی کاشت فروری سے مارچ میں کریں۔ سندھ میں فروری، پنجاب میں مارچ۔ کپاس کے کیڑے سے بچاؤ کے لیے مناسب دوائی کا استعمال کریں۔",
+      english: "Plant cotton in Pakistan from February to March. February in Sindh, March in Punjab. Use appropriate pesticides for cotton bollworm control."
     },
     
     // Sugarcane related queries
@@ -163,14 +131,14 @@ const askChatGPT = async (req, res) => {
       english: "Plant maize from March to April. Use fertilizers appropriately."
     },
     
-    // Weather related queries
+    // Weather related queries - Pakistan specific
     "weather": {
-      urdu: "آج کا موسم کھیتی کے لیے اچھا ہے۔ پانی کا خیال رکھیں اور ضرورت پڑنے پر سایہ کریں۔",
-      english: "Today's weather is good for farming. Take care of water and provide shade when needed."
+      urdu: "پاکستان کے موسم کے مطابق کھیتی کریں۔ گرمی میں صبح شام پانی دیں، سردی میں دوپہر کو۔ مون سون میں بارش کا خیال رکھیں۔",
+      english: "Farm according to Pakistan's weather. Water in morning/evening during summer, afternoon in winter. Be careful of monsoon rains."
     },
     "موسم": {
-      urdu: "آج کا موسم کھیتی کے لیے اچھا ہے۔ پانی کا خیال رکھیں اور ضرورت پڑنے پر سایہ کریں۔",
-      english: "Today's weather is good for farming. Take care of water and provide shade when needed."
+      urdu: "پاکستان کے موسم کے مطابق کھیتی کریں۔ گرمی میں صبح شام پانی دیں، سردی میں دوپہر کو۔ مون سون میں بارش کا خیال رکھیں۔",
+      english: "Farm according to Pakistan's weather. Water in morning/evening during summer, afternoon in winter. Be careful of monsoon rains."
     },
     
     // Pest control queries
@@ -183,28 +151,28 @@ const askChatGPT = async (req, res) => {
       english: "Use appropriate pesticides for pest control. Use natural methods along with chemical pesticides."
     },
     
-    // Water management queries
+    // Water management queries - Pakistan specific
     "water": {
-      urdu: "پانی کی بچت کے لیے ڈرپ ایریگیشن استعمال کریں۔ صبح یا شام کو پانی دیں۔",
-      english: "Use drip irrigation for water conservation. Water in the morning or evening."
+      urdu: "پاکستان میں پانی کی بچت کے لیے ڈرپ ایریگیشن استعمال کریں۔ نہری پانی اور ٹیوب ویل کا مناسب استعمال کریں۔ صبح یا شام کو پانی دیں۔",
+      english: "Use drip irrigation to save water in Pakistan. Use canal water and tube wells properly. Water in morning or evening."
     },
     "پانی": {
-      urdu: "پانی کی بچت کے لیے ڈرپ ایریگیشن استعمال کریں۔ صبح یا شام کو پانی دیں۔",
-      english: "Use drip irrigation for water conservation. Water in the morning or evening."
+      urdu: "پاکستان میں پانی کی بچت کے لیے ڈرپ ایریگیشن استعمال کریں۔ نہری پانی اور ٹیوب ویل کا مناسب استعمال کریں۔ صبح یا شام کو پانی دیں۔",
+      english: "Use drip irrigation to save water in Pakistan. Use canal water and tube wells properly. Water in morning or evening."
     },
     "paani": {
-      urdu: "پانی کی بچت کے لیے ڈرپ ایریگیشن استعمال کریں۔ صبح یا شام کو پانی دیں۔",
-      english: "Use drip irrigation for water conservation. Water in the morning or evening."
+      urdu: "پاکستان میں پانی کی بچت کے لیے ڈرپ ایریگیشن استعمال کریں۔ نہری پانی اور ٹیوب ویل کا مناسب استعمال کریں۔ صبح یا شام کو پانی دیں۔",
+      english: "Use drip irrigation to save water in Pakistan. Use canal water and tube wells properly. Water in morning or evening."
     },
     
-    // Fertilizer queries
+    // Fertilizer queries - Pakistan specific
     "fertilizer": {
-      urdu: "کھاد کا استعمال موسم اور فصل کے مطابق کریں۔ NPK کھاد کا مناسب تناسب استعمال کریں۔",
-      english: "Use fertilizers according to season and crop. Use appropriate NPK fertilizer ratio."
+      urdu: "پاکستان میں NPK، یوریا، DAP کھاد کا استعمال کریں۔ گندم کے لیے 50-25-25، چاول کے لیے 60-30-30 کلوگرام فی ایکڑ۔",
+      english: "Use NPK, Urea, DAP fertilizers in Pakistan. 50-25-25 for wheat, 60-30-30 kg per acre for rice."
     },
     "کھاد": {
-      urdu: "کھاد کا استعمال موسم اور فصل کے مطابق کریں۔ NPK کھاد کا مناسب تناسب استعمال کریں۔",
-      english: "Use fertilizers according to season and crop. Use appropriate NPK fertilizer ratio."
+      urdu: "پاکستان میں NPK، یوریا، DAP کھاد کا استعمال کریں۔ گندم کے لیے 50-25-25، چاول کے لیے 60-30-30 کلوگرام فی ایکڑ۔",
+      english: "Use NPK, Urea, DAP fertilizers in Pakistan. 50-25-25 for wheat, 60-30-30 kg per acre for rice."
     },
     
     // Harvest queries
@@ -382,81 +350,62 @@ const handleVoiceQuery = async (req, res) => {
     return res.status(400).json({ error: "No voice input provided." });
   }
 
-  // Try multiple AI APIs for voice queries
-  for (let i = 0; i < AI_APIS.length; i++) {
-    const api = AI_APIS[i];
-    try {
-      console.log(`🤖 Trying ${api.name} API for voice...`);
-      
-      let response;
-      if (api.name === 'Hugging Face Router') {
-        response = await axios.post(
-          api.url,
+  // Try Gemini API for voice queries
+  try {
+    console.log(`🤖 Trying ${GEMINI_API.name} API for voice...`);
+    
+    const response = await axios.post(
+      `${GEMINI_API.url}?key=${GEMINI_API.token}`,
+      {
+        contents: [
           {
-            model: api.model,
-            messages: [
+            parts: [
               {
-                role: "system",
-                content: `You are an agricultural voice assistant for Pakistani farmers. Provide specific, actionable answers in ${language === 'ur' ? 'Urdu' : 'English'} with clear, spoken-friendly language. Keep responses short but specific to the question asked. Make responses audible and clear.`
-              },
-              {
-                role: "user",
-                content: userInput
+                text: `You are an agricultural voice assistant specifically for Pakistani farmers. Provide location-specific advice for Pakistan's climate and agricultural practices.
+
+CONTEXT FOR PAKISTAN:
+- Climate: Semi-arid to arid with hot summers and cool winters
+- Major growing regions: Punjab, Sindh, Khyber Pakhtunkhwa, Balochistan
+- Soil types: Alluvial soils in Punjab/Sindh, clay loam in KP, sandy in Balochistan
+- Water sources: Canal irrigation, tube wells, rainfall (monsoon)
+- Major crops: Wheat, Rice, Cotton, Sugarcane, Maize, Pulses
+- Growing seasons: Rabi (Oct-Mar), Kharif (Apr-Sep)
+- Common pests: Cotton bollworm, wheat aphid, rice stem borer
+- Fertilizer types: NPK, Urea, DAP commonly used
+
+Provide specific, actionable answers in ${language === 'ur' ? 'Urdu' : 'English'} with clear, spoken-friendly language. Focus on Pakistan's farming conditions, local crop varieties, regional weather patterns, and practical solutions for Pakistani farmers. Keep responses short but specific to the question asked. Make responses audible and clear.
+
+User question: ${userInput}`
               }
-            ],
-            max_tokens: 200,
-            temperature: 0.7
-          },
-          {
-            headers: {
-              'Authorization': `Bearer ${api.token}`,
-              'Content-Type': 'application/json'
-            },
-            timeout: 10000
+            ]
           }
-        );
-      } else {
-        // Hugging Face Inference APIs
-        response = await axios.post(
-          api.url,
-          {
-            inputs: `Farmer: ${userInput}\nAgricultural Assistant:`,
-            parameters: {
-              max_length: 150,
-              temperature: 0.7,
-              do_sample: true
-            }
-          },
-          {
-            headers: {
-              'Authorization': `Bearer ${api.token}`,
-              'Content-Type': 'application/json'
-            },
-            timeout: 8000
-          }
-        );
-      }
-
-      let aiVoiceReply = '';
-      if (api.name === 'Hugging Face Router') {
-        if (response.data && response.data.choices && response.data.choices[0] && response.data.choices[0].message) {
-          aiVoiceReply = response.data.choices[0].message.content;
+        ],
+        generationConfig: {
+          maxOutputTokens: 200,
+          temperature: 0.7,
+          topP: 0.8,
+          topK: 40
         }
-      } else {
-        // Hugging Face Inference
-        if (response.data && response.data[0] && response.data[0].generated_text) {
-          aiVoiceReply = response.data[0].generated_text.replace('Agricultural Assistant:', '').trim();
-        }
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        timeout: 15000
       }
+    );
 
-      if (aiVoiceReply && aiVoiceReply.length > 10) {
-        console.log(`✅ ${api.name} Voice API Success:`, aiVoiceReply);
-        return res.status(200).json({ reply: aiVoiceReply, language, ai: true, api: api.name });
-      }
-    } catch (error) {
-      console.log(`❌ ${api.name} Voice API failed:`, error.message);
-      continue; // Try next API
+    let aiVoiceReply = '';
+    if (response.data && response.data.candidates && response.data.candidates[0] && response.data.candidates[0].content && response.data.candidates[0].content.parts && response.data.candidates[0].content.parts[0]) {
+      aiVoiceReply = response.data.candidates[0].content.parts[0].text;
     }
+
+    if (aiVoiceReply && aiVoiceReply.length > 10) {
+      console.log(`✅ ${GEMINI_API.name} Voice API Success:`, aiVoiceReply);
+      return res.status(200).json({ reply: aiVoiceReply, language, ai: true, api: GEMINI_API.name });
+    }
+  } catch (error) {
+    console.log(`❌ ${GEMINI_API.name} Voice API failed:`, error.message);
   }
 
   // Enhanced voice responses for agricultural queries

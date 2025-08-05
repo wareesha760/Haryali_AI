@@ -53,7 +53,7 @@ function ShopRow() {
     <div className="flex justify-center items-center py-16 px-4">
       {/* 🌟 Outer Glass Card */}
       <motion.div
-        className="w-full max-w-6xl bg-white/30 backdrop-blur-lg rounded-3xl shadow-2xl p-10 border border-white/40 flex flex-col items-center"
+        className="w-full max-w-6xl bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl p-10 border border-white/40 flex flex-col items-center"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}

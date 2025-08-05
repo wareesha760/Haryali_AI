@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import ShopRow from "../components/shprow";
 import AboutKisaanBot from "../components/AboutKisaanBot";
 import HomePageBanner from "../components/HomePageBanner";
+import TrustedBrands from "../components/TrustedBrands";
+import ContactForm from "../components/ContactForm";
 
 export default function Home() {
   return (
@@ -20,9 +22,18 @@ export default function Home() {
 
       {/* About Section */}
       <AboutKisaanBot />
+      
+      
+      
       {/* Shop Row */}
       <ShopRow />
+      
+      {/* Home Page Banner */}
       <HomePageBanner/>
+      {/* Trusted Brands Section */}
+      <TrustedBrands />
+      {/* Contact Form Section */}
+      <ContactForm />
       
     </div>
   );

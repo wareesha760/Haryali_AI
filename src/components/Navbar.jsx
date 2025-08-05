@@ -64,6 +64,12 @@ const Navbar = () => {
           <Link to="/shop" className={getLinkClasses("/shop")}>
             دکان
           </Link>
+          <a 
+            href="#contact" 
+            className="px-6 py-3 font-bold rounded-full transition text-gray-700 hover:bg-green-100 hover:text-green-600"
+          >
+            رابطہ کریں
+          </a>
           {user && (
             <Link to="/profile" className={getLinkClasses("/profile")}>
               پروفائل
@@ -105,6 +111,13 @@ const Navbar = () => {
           <Link to="/shop" className="block" onClick={toggleMenu}>
             دکان
           </Link>
+          <a 
+            href="#contact" 
+            className="block" 
+            onClick={toggleMenu}
+          >
+            رابطہ کریں
+          </a>
           {user && (
             <Link to="/profile" className="block" onClick={toggleMenu}>
               پروفائل

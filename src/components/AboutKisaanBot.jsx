@@ -15,7 +15,8 @@ function AboutKisaanBot() {
   return (
     <section
       id="about"
-      className="relative pt-10 pb-5 overflow-hidden "
+      className="relative w-full max-w-7xl  rounded-3xl  pt-10 mb-10 overflow-hidden "
+      // flex justify center relative w-full max-w-7xl bg-white/70 backdrop-blur-lg mb-10 rounded-3xl shadow-2xl border border-white/40 p-6  cursor-pointer
     >
         <div className="mt-20">
       {/* Floating Animated Shapes */}

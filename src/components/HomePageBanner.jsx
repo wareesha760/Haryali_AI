@@ -9,7 +9,7 @@ const HomePageBanner = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="relative flex justify-center items-center min-h-[400px] pb-10 font-[Noto Nastaliq Urdu]">
+    <div className="relative flex justify-center items-center min-h-[400px] mb-10 font-[Noto Nastaliq Urdu]">
       {/* Floating Shapes */}
       <motion.div
         className="absolute top-10 left-20 w-32 h-32 bg-green-300 rounded-full blur-3xl opacity-20"
@@ -24,7 +24,7 @@ const HomePageBanner = () => {
 
       {/* Outer Glass Card */}
       <motion.div
-        className="relative w-full max-w-7xl bg-white/30 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/40 p-6  cursor-pointer"
+        className="relative w-full max-w-7xl bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/40 p-6  cursor-pointer"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}

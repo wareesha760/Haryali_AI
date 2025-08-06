@@ -75,7 +75,6 @@ export default function SmartPlanner() {
     setSeedQuality("");
     setFertilizers([]);
     setName("");
-    setPhone("");
     setLocation("");
     setBudget("");
     setResult("");
@@ -135,7 +134,6 @@ export default function SmartPlanner() {
           {/* Input Fields */}
           {[
             { placeholder: "کسان کا نام", value: name, setter: setName },
-            { placeholder: "فون نمبر", value: phone, setter: setPhone },
             { placeholder: "مقام", value: location, setter: setLocation },
             { placeholder: "مالی حد", value: budget, setter: setBudget },
             { placeholder: "فصل", value: crop, setter: setCrop },

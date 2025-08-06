@@ -30,7 +30,7 @@ const TrustedBrands = () => {
   ];
 
   return (
-    <section className="py-5 px-4 md:px-10">
+    <section className="relative w-full max-w-7xl bg-white/70 backdrop-blur-lg mb-10 rounded-3xl shadow-2xl border border-white/40 p-6  cursor-pointer">
       {/* Glass Card Container (including heading + strip) */}
       <motion.div
         className="relative w-full max-w-7xl bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/40 p-6  cursor-pointer"

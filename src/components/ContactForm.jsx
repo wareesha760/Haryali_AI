@@ -40,7 +40,7 @@ const ContactForm = () => {
   };
 
   return (
-    <section id="contact" className="py-10 px-4 md:px-10">
+    <section id="contact" className="relative w-full max-w-7xl bg-white/70 backdrop-blur-lg  mb-10  rounded-3xl shadow-2xl border border-white/40 p-6  cursor-pointer">
       <motion.div
         className="relative bg-white/70 backdrop-blur-xl rounded-3xl border border-white/30 shadow-xl max-w-6xl mx-auto overflow-hidden"
         initial={{ opacity: 0, y: 20 }}

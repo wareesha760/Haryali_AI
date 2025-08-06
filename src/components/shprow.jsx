@@ -53,10 +53,10 @@ function ShopRow() {
   const { user } = useAuth();
   const subscription = user?.subscription || null;
   return (
-    <div className="flex justify-center items-center py-16 px-4">
+    <div className="relative w-full max-w-7xl bg-white/70 mb-10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/40 p-6  cursor-pointer">
       {/* 🌟 Outer Glass Card */}
       <motion.div
-        className="w-full max-w-6xl bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl p-10 border border-white/40 flex flex-col items-center"
+        className="w-full max-w-9xl max-auto bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl p-10 border border-white/40 flex flex-col items-center"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
@@ -69,12 +69,12 @@ function ShopRow() {
           transition={{ duration: 0.8 }}
         >
           <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-green-400 via-lime-400 to-green-500 rounded-full blur-lg opacity-40"
+            className="absolute inset-0 justify-center bg-gradient-to-r from-green-400 via-lime-400 to-green-500 rounded-full blur-lg opacity-40"
             animate={{ scale: [1, 1.1, 1] }}
             transition={{ repeat: Infinity, duration: 2 }}
           />
           <motion.div
-            className="relative px-10 py-3 bg-white/40 backdrop-blur-xl rounded-full shadow-xl border border-white/30"
+            className="relative justify-center px-10 py-3 bg-white/40 backdrop-blur-xl rounded-full shadow-xl border border-white/30"
             whileHover={{ scale: 1.05 }}
           >
             <h1 className="text-3xl font-extrabold text-green-800">ہماری خدمات</h1>

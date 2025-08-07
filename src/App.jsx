@@ -79,11 +79,12 @@ function App() {
               path="/appointments"
               element={<AppointmentsPage appointments={appointments} />}
             />
-            <Route path="/voice" element={<VoiceChatCard />} />
             <Route path="/login" element={<Login />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/order" element={<OrderPage />} />
+            <Route path="/voice" element={<VoiceChatCard />} />
+
           </Routes>
 
           <Footer />

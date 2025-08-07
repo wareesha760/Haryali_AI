@@ -19,7 +19,7 @@ import VoiceChatCard from "./components/VoiceChatCard";
 import { AuthProvider } from "./context/AuthContext";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
-import SmartPlanner from "./pages/SmartPlanner";
+import SmartCropPlanner from "./pages/SmartCropPlanner";
 import SignupPage from "./pages/Signup";
 import OrderPage from "./pages/OrderPage";
 import AddTractor from "./pages/AddTractor";
@@ -64,7 +64,8 @@ function App() {
             <Route path="/fertilizer" element={<FertilizerCalculator />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/pricing" element={<Pricing />} />
-            <Route path="/planner" element={<SmartPlanner />} />
+            <Route path="/planner" element={<SmartCropPlanner />} />
+            <Route path="/smart-crop-planner" element={<SmartCropPlanner />} />
             <Route
               path="/advisor"
               element={

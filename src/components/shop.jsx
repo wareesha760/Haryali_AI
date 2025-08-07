@@ -60,7 +60,7 @@ function Shop({ title, image, description, url = "", subscription }) {
     >
       {isDisabled ? (
         <div
-          className={`rounded-2xl shadow-xl border border-white/70 overflow-hidden transition-all duration-300 w-80 h-[380px] opacity-50 grayscale pointer-events-none ${cardStyle}`}
+          className={`rounded-2xl shadow-xl border border-white/70 overflow-hidden transition-all duration-300 w-80 h-[380px] opacity-50 ${cardStyle}`}
         >
           <motion.img
             src={image}

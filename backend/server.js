@@ -39,6 +39,7 @@ const appointmentRoutes = require("./routes/appointments");
 const machineryRoutes = require("./routes/machinery");
 const productRoutes = require("./routes/products");
 const fertilizerRoutes = require("./routes/fertilizer");
+const plannerRoutes = require("./routes/planner");
 
 // 🔗 Connect to MongoDB
 mongoose
@@ -59,13 +60,33 @@ app.use("/api/appointments", appointmentRoutes); // ✅ Use Appointment Routes
 app.use("/api/machinery", machineryRoutes); // ✅ Use Machinery Routes
 app.use("/api/products", productRoutes); // ✅ Use Product Routes
 app.use("/api/fertilizer", fertilizerRoutes); // ✅ Use Fertilizer Routes
+app.use("/api/planner", plannerRoutes); // ✅ Use Planner Routes
 
 // Serve uploaded files
 app.use("/uploads", express.static("uploads"));
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error('❌ Server error:', err);
+  res.status(500).json({ error: 'Internal server error' });
+});
 
 // 🚪 Start Server
 const PORT =  5001;
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
+});
+
+// Handle server errors
+server.on('error', (err) => {
+  console.error('❌ Server error:', err);
+});
+
+// Handle uncaught exceptions
+process.on('uncaughtException', (err) => {
+  console.error('❌ Uncaught Exception:', err);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
 });

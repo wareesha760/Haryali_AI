@@ -32,7 +32,7 @@ const cardData = [
     title: " 👑سمارٹ کسان پلانر", 
     image: calendarImg, 
     description: "ایک ذہین زراعتی فیچر ہے جو کسانوں کو ان کی زمین، موسم، پانی، اور علاقے کے لحاظ سے بہترین فصل کی منصوبہ بندی میں مدد فراہم کرتا ہے۔",
-    url:"/planner" 
+    url:"/smart-crop-planner" 
   },
   { 
     title: "کھاد کیلکولیٹر", 

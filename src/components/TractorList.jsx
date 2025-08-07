@@ -21,7 +21,7 @@ export default function TractorList({ tractors = [] }) {
       available: true
     },
     {
-      title: "40-49 HP ٹریکٹر",
+      title: "40-49 HPتھریشر",
       catClass: "050-0004",
       specs: ["طاقتور زمین ہموار کرنے کی صلاحیت", "4WD آپریشنل", "3 پوائنٹ ہچ فار اٹیچمنٹس"],
       price: 2200,

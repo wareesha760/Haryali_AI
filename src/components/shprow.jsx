@@ -32,7 +32,7 @@ const cardData = [
     title: " 👑سمارٹ کسان پلانر", 
     image: calendarImg, 
     description: "ایک ذہین زراعتی فیچر ہے جو کسانوں کو ان کی زمین، موسم، پانی، اور علاقے کے لحاظ سے بہترین فصل کی منصوبہ بندی میں مدد فراہم کرتا ہے۔",
-    url:"/smart-crop-planner" 
+    url:"/planner" 
   },
   { 
     title: "کھاد کیلکولیٹر", 
@@ -56,7 +56,7 @@ function ShopRow() {
     <div className="relative w-full max-w-7xl bg-white/70 mb-10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/40 p-6  cursor-pointer">
       {/* 🌟 Outer Glass Card */}
       <motion.div
-        className="w-full max-w-9xl max-auto bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl p-10 border border-white/40 flex flex-col items-center"
+        className="w-full max-w-9xl max-auto bg-white/70 backdrop-blur-lg rounded-3xl shadow-2xl p-6 sm:p-10 border border-white/40 flex flex-col items-center"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
@@ -74,7 +74,7 @@ function ShopRow() {
             transition={{ repeat: Infinity, duration: 2 }}
           />
           <motion.div
-            className="relative justify-center px-10 py-3 bg-white/40 backdrop-blur-xl rounded-full shadow-xl border border-white/30"
+            className="relative justify-center px-6 sm:px-10 py-3 bg-white/40 backdrop-blur-xl rounded-full shadow-xl border border-white/30"
             whileHover={{ scale: 1.05 }}
           >
             <h1 className="text-3xl font-extrabold text-green-800">ہماری خدمات</h1>

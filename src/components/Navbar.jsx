@@ -29,12 +29,12 @@ const Navbar = () => {
     <nav
       className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ease-in-out ${
         isScrolled
-          ? "w-[90%] rounded-full backdrop-blur-md bg-white/70 shadow-lg"
-          : "w-full rounded-none  shadow-md"
+          ? "w-[94%] sm:w-[90%] rounded-full backdrop-blur-md bg-white/70 shadow-lg"
+          : "w-full rounded-none shadow-md"
       }`}
     >
       <div
-        className={`flex items-center justify-between px-12 transition-all duration-500 ${
+        className={`flex items-center justify-between px-4 sm:px-6 md:px-12 transition-all duration-500 ${
           isScrolled ? "py-3" : "py-6"
         }`}
       >
@@ -44,12 +44,12 @@ const Navbar = () => {
   src={logoImg}
   alt="Haryali AI Logo"
   className={`transition-all duration-500 ${
-    isScrolled ? "h-14" : "h-20"
+    isScrolled ? "h-12 md:h-14" : "h-16 md:h-20"
   }`}
 />
           <span
             className={`font-bold transition-all duration-500 ${
-              isScrolled ? "text-2xl" : "text-3xl"
+              isScrolled ? "text-xl sm:text-2xl" : "text-2xl md:text-3xl"
             }`}
           >
             Haryali AI

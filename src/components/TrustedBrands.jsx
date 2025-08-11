@@ -52,7 +52,7 @@ const TrustedBrands = () => {
               transition={{ repeat: Infinity, duration: 2 }}
             />
             <motion.div
-              className="relative px-10 py-3 bg-white/40 backdrop-blur-xl rounded-full shadow-xl border border-white/30"
+              className="relative px-6 sm:px-10 py-3 bg-white/40 backdrop-blur-xl rounded-full shadow-xl border border-white/30"
               whileHover={{ scale: 1.05 }}
             >
               <h2 className="text-3xl font-extrabold text-green-800">

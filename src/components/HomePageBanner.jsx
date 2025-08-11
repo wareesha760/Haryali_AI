@@ -32,7 +32,7 @@ const HomePageBanner = () => {
         onClick={() => navigate("/shop")}
       >
         {/* Inner White Card */}
-        <div className="bg-white/90 rounded-2xl p-10 flex flex-col md:flex-row items-center justify-between shadow-lg">
+        <div className="bg-white/90 rounded-2xl p-6 sm:p-10 flex flex-col md:flex-row items-center justify-between shadow-lg">
           
           {/* ✅ Image on Left */}
           <motion.div
@@ -54,12 +54,12 @@ const HomePageBanner = () => {
 
           {/* ✅ Text on Right */}
           <div className="text-right z-10 flex-1 pr-6">
-            <h3 className="text-4xl md:text-5xl font-bold text-green-800 mb-4">
+            <h3 className="text-3xl sm:text-4xl md:text-5xl font-bold text-green-800 mb-4">
              زبردست رعایت!
             </h3>
 
             <motion.p
-              className="text-7xl md:text-9xl font-extrabold bg-gradient-to-r from-red-500 to-yellow-400 bg-clip-text text-transparent drop-shadow-xl mb-4"
+              className="text-5xl sm:text-7xl md:text-9xl font-extrabold bg-gradient-to-r from-red-500 to-yellow-400 bg-clip-text text-transparent drop-shadow-xl mb-4"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1.1 }}
               transition={{ delay: 0.3, duration: 0.6 }}
@@ -67,11 +67,11 @@ const HomePageBanner = () => {
               25%
             </motion.p>
 
-            <p className="text-3xl md:text-4xl text-gray-800 font-semibold mb-3">
+            <p className="text-2xl sm:text-3xl md:text-4xl text-gray-800 font-semibold mb-3">
               کھاد کی مصنوعات پر خصوصی رعایت حاصل کریں
             </p>
 
-            <p className="text-xl md:text-2xl text-gray-600">
+            <p className="text-lg sm:text-xl md:text-2xl text-gray-600">
                ! ابھی خریداری کریں اور اپنی فصلوں کی لاگت کم کریں 
             </p>
           </div>

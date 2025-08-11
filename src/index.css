@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* Avoid horizontal scroll on small screens */
+html, body, #root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 /* Responsive background image fix */
 @media (max-width: 640px) {
   .bg-fixed {

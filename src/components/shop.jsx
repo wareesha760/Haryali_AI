@@ -60,7 +60,7 @@ function Shop({ title, image, description, url = "", subscription }) {
     >
       {isDisabled ? (
         <div
-          className={`rounded-2xl shadow-xl border border-white/70 overflow-hidden transition-all duration-300 w-80 h-[380px] opacity-50 ${cardStyle}`}
+          className={`rounded-2xl shadow-xl border border-white/70 overflow-hidden transition-all duration-300 w-full max-w-xs sm:w-72 md:w-80 h-auto min-h-[340px] opacity-50 grayscale pointer-events-none ${cardStyle}`}
         >
           <motion.img
             src={image}
@@ -89,7 +89,7 @@ function Shop({ title, image, description, url = "", subscription }) {
       ) : (
         <a href={isAIVoice && subscription === "mamoli" ? undefined : url} onClick={onClick}>
           <div
-            className={`rounded-2xl shadow-xl border border-white/30 overflow-hidden transition-all duration-300 cursor-pointer w-80 h-[380px] hover:shadow-2xl ${cardStyle}`}
+            className={`rounded-2xl shadow-xl border border-white/30 overflow-hidden transition-all duration-300 cursor-pointer w-full max-w-xs sm:w-72 md:w-80 h-auto min-h-[340px] hover:shadow-2xl ${cardStyle}`}
             onMouseMove={handleMove}
             onMouseLeave={() => setTilt({ x: 0, y: 0 })}
             style={{

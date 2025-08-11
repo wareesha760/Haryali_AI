@@ -16,7 +16,7 @@ export default function Footer() {
       <footer className="w-full bg-white opacity-70 text-black py-6 px-4 shadow-inner">
         <div className="max-w-7xl mx-auto">
           {/* Main Footer Content */}
-          <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-4">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-4 text-center md:text-left">
             {/* Logo + Title */}
             <div className="flex items-center gap-3">
               <img src={logoImg} alt="KisaanBot Logo" className="w-14 h-14" />
@@ -40,7 +40,7 @@ export default function Footer() {
             </div>
 
             {/* Links */}
-            <div className="text-sm flex gap-4 text-black/70">
+            <div className="text-sm flex flex-wrap justify-center gap-4 text-black/70">
               <a href="#" className="hover:text-green-700 transition">Privacy</a>
               <a href="#" className="hover:text-green-700 transition">Terms</a>
               <a href="#" className="hover:text-green-700 transition">Support</a>

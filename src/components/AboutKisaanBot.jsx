@@ -33,7 +33,7 @@ function AboutKisaanBot() {
 
       {/* Glass Card */}
       <motion.div
-        className="relative max-w-6xl mx-auto rounded-3xl p-12 flex flex-col md:flex-row items-center justify-center gap-10 backdrop-blur-lg bg-white/70 shadow-2xl"
+        className="relative max-w-6xl mx-auto rounded-3xl p-6 sm:p-12 flex flex-col md:flex-row items-center justify-center gap-6 sm:gap-10 backdrop-blur-lg bg-white/70 shadow-2xl"
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
@@ -53,7 +53,7 @@ function AboutKisaanBot() {
           <motion.img
   src={logoImg}
   alt="Haryali ai Logo"
-  className="w-64 md:w-80 lg:w-[22rem]"
+  className="w-40 sm:w-64 md:w-80 lg:w-[22rem]"
   animate={{ scale: [1, 1.08, 1] }}
   transition={{ repeat: Infinity, duration: 2 }}
 />
@@ -68,7 +68,7 @@ function AboutKisaanBot() {
         >
           {/* Premium Heading with Animated Underline */}
           <div className="relative inline-block mb-4">
-            <h2 className="text-6xl font-extrabold text-gray-900 tracking-tight">
+            <h2 className="text-3xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 tracking-tight">
               Haryali AI
             </h2>
             <motion.div
@@ -80,12 +80,12 @@ function AboutKisaanBot() {
           </div>
 
           {/* Urdu Subtitle */}
-          <h3 className="text-4xl font-semibold bg-gradient-to-r from-green-700 to-lime-400 bg-clip-text text-transparent mb-4">
+          <h3 className="text-2xl sm:text-3xl md:text-4xl font-semibold bg-gradient-to-r from-green-700 to-lime-400 bg-clip-text text-transparent mb-4">
             سمجھدار کسان، ہرا بھرا میدان
           </h3>
 
           {/* Paragraph */}
-          <p className="text-lg text-gray-700 text-right leading-relaxed">
+          <p className="text-base sm:text-lg text-gray-700 text-right leading-relaxed">
   ہریالی اے آئی ایک جدید زرعی پلیٹ فارم ہے جو پاکستان کے کسانوں کو مصنوعی ذہانت پر مبنی ٹیکنالوجی اور معلومات فراہم کرتا ہے تاکہ وہ اپنی فصلوں کی پیداوار، معیار اور منافع میں اضافہ کر سکیں۔ یہ پلیٹ فارم موسمی حالات کی پیشن گوئی، زمین کی جانچ، بیجوں کی درست سفارش، زرعی مشینری کے کرائے اور جدید زرعی مشوروں جیسے تمام حل ایک ہی جگہ پر فراہم کرتا ہے۔ ہریالی اے آئی کا مقصد دیہی معیشت کو ڈیجیٹل طور پر مضبوط بنانا، کسانوں کی آمدنی میں اضافہ کرنا اور پائیدار زرعی طریقوں کے ذریعے پاکستان کو خوراک میں خود کفیل بنانا ہے۔
 </p>
 

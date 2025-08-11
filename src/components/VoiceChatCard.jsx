@@ -420,7 +420,7 @@ const VoiceChatCard = () => {
   return (
     <div
       dir="rtl"
-      className="min-h-screen flex flex-col items-center pt-40 p-6 bg-transparent"
+      className="min-h-screen flex flex-col items-center pt-32 sm:pt-40 p-4 sm:p-6 bg-transparent"
     >
       {/* ✅ Animated Ribbon */}
       <motion.div
@@ -438,7 +438,7 @@ const VoiceChatCard = () => {
 
         {/* Glass Ribbon */}
         <motion.div
-          className="relative px-8 py-3 bg-white/40 backdrop-blur-xl rounded-full shadow-xl border border-white/30"
+          className="relative px-6 sm:px-8 py-3 bg-white/40 backdrop-blur-xl rounded-full shadow-xl border border-white/30"
           whileHover={{ scale: 1.05 }}
           transition={{ type: "spring", stiffness: 150 }}
         >
@@ -449,8 +449,8 @@ const VoiceChatCard = () => {
       </motion.div>
 
       {/* ✅ Chat Card */}
-      <motion.div
-        className="w-full max-w-2xl h-[85vh] bg-white/70 backdrop-blur-xl rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-white/30"
+        <motion.div
+          className="w-full max-w-2xl h-[80vh] sm:h-[85vh] bg-white/70 backdrop-blur-xl rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-white/30"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -473,7 +473,7 @@ const VoiceChatCard = () => {
                 </div>
               )}
               <div
-                className={`p-3 rounded-xl max-w-[70%] ${
+                className={`p-3 rounded-xl max-w-[85%] sm:max-w-[70%] ${
                   msg.type === "bot"
                     ? "bg-green-100 text-green-700 rounded-br-none"
                     : "bg-gray-100 text-blue-700 rounded-bl-none"
@@ -496,9 +496,9 @@ const VoiceChatCard = () => {
           ))}
           
           {/* Live transcript display */}
-          {isListening && transcript && (
+            {isListening && transcript && (
             <div className="flex justify-start">
-              <div className="p-3 rounded-xl bg-blue-100 text-blue-700 rounded-bl-none max-w-[70%]">
+              <div className="p-3 rounded-xl bg-blue-100 text-blue-700 rounded-bl-none max-w-[85%] sm:max-w-[70%]">
                 <span>{transcript}</span>
                 <div className="text-xs text-gray-500 mt-1">🎤 Listening...</div>
               </div>

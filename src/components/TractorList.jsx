@@ -21,7 +21,7 @@ export default function TractorList({ tractors = [] }) {
       available: true
     },
     {
-      title: "40-49 HPتھریشر",
+      title: "40-49 HP ٹریکٹر",
       catClass: "050-0004",
       specs: ["طاقتور زمین ہموار کرنے کی صلاحیت", "4WD آپریشنل", "3 پوائنٹ ہچ فار اٹیچمنٹس"],
       price: 2200,
@@ -47,7 +47,7 @@ export default function TractorList({ tractors = [] }) {
 
   return (
     <motion.div
-      className="w-full max-w-6xl p-10 rounded-3xl bg-white/50 backdrop-blur-xl shadow-2xl border border-white/30 mx-auto"
+      className="w-full max-w-6xl p-6 sm:p-10 rounded-3xl bg-white/50 backdrop-blur-xl shadow-2xl border border-white/30 mx-auto"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.8 }}

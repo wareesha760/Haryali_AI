@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import botImg from "../assets/chatbot.jpg";
 import farmerImg from "../assets/farmer.png";
 import axios from "axios";
+import API_BASE_URL from "../config/api";
 
 const VoiceChatCard = () => {
   const [messages, setMessages] = useState([
@@ -186,7 +187,7 @@ const VoiceChatCard = () => {
 
     try {
       // Send to backend for AI response
-      const res = await axios.post("http://localhost:5001/api/chat/ask", {
+      const res = await axios.post(`${API_BASE_URL}/chat/ask`, {
         userInput: voiceText,
       });
 
@@ -279,7 +280,7 @@ const VoiceChatCard = () => {
 
     try {
       // Send to backend
-      const res = await axios.post("http://localhost:5001/api/chat/ask", {
+      const res = await axios.post(`${API_BASE_URL}/chat/ask`, {
         userInput: userMessage,
       });
 

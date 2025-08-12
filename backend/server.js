@@ -41,14 +41,30 @@ const productRoutes = require("./routes/products");
 const fertilizerRoutes = require("./routes/fertilizer");
 const plannerRoutes = require("./routes/planner");
 
-// 🔗 Connect to MongoDB
-mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true, // optional in latest versions
-    useUnifiedTopology: true // optional in latest versions
-  })
-  .then(() => console.log("✅ MongoDB connected"))
-  .catch((err) => console.error("❌ MongoDB connection error:", err));
+// 🔗 MongoDB Connection Function
+let cachedDb = null;
+
+async function connectToDatabase() {
+  if (cachedDb) {
+    return cachedDb;
+  }
+
+  try {
+    const mongoUri = process.env.MONGO_URI || 'mongodb+srv://Haryali-AI:Haryali-AI@haryali-ai-cluster.oomvpqn.mongodb.net/kisaan-bot?retryWrites=true&w=majority&appName=Haryali-AI-cluster';
+    
+    const connection = await mongoose.connect(mongoUri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    
+    cachedDb = connection;
+    console.log("✅ MongoDB connected");
+    return connection;
+  } catch (err) {
+    console.error("❌ MongoDB connection error:", err);
+    throw err;
+  }
+}
 
 // 🧭 Route Usage
 app.use("/api/auth", authRoutes);
@@ -71,16 +87,30 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: 'Internal server error' });
 });
 
-// 🚪 Start Server
-const PORT =  5001;
-const server = app.listen(PORT, () => {
-  console.log(`✅ Server running on port ${PORT}`);
+// Health check endpoint
+app.get("/", (req, res) => {
+  res.json({ message: "Kisaan Bot API is running! 🌾" });
 });
 
-// Handle server errors
-server.on('error', (err) => {
-  console.error('❌ Server error:', err);
-});
+// Connect to database before starting server
+connectToDatabase()
+  .then(() => {
+    // 🚪 Start Server (only if not in Vercel)
+    if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+      const PORT = process.env.PORT || 5001;
+      const server = app.listen(PORT, () => {
+        console.log(`✅ Server running on port ${PORT}`);
+      });
+
+      // Handle server errors
+      server.on('error', (err) => {
+        console.error('❌ Server error:', err);
+      });
+    }
+  })
+  .catch((err) => {
+    console.error('❌ Failed to connect to database:', err);
+  });
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (err) => {
@@ -90,3 +120,6 @@ process.on('uncaughtException', (err) => {
 process.on('unhandledRejection', (reason, promise) => {
   console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
 });
+
+// Export for Vercel serverless
+module.exports = app;

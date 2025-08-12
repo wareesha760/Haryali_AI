@@ -1,12 +1,10 @@
 {
-  "name": "kisaan-bot-backend",
+  "name": "weather-backend-live",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js",
-    "build": "echo 'No build step required'",
-    "vercel-build": "echo 'Vercel build completed'"
+    "dev": "nodemon server.js"
   },
   "dependencies": {
     "axios": "^1.6.0",
@@ -22,8 +20,5 @@
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
-  },
-  "engines": {
-    "node": ">=18.0.0"
   }
 }

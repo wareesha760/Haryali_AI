@@ -3,7 +3,6 @@ import { WiDayRain, WiCloudy, WiDaySunny } from "react-icons/wi";
 import { FaCloudShowersHeavy } from "react-icons/fa";
 import { motion } from "framer-motion";
 import axios from "axios";
-import API_BASE_URL from "../config/api";
 
 // ✅ Urdu Date
 const getCurrentDate = (offset = 0) => {
@@ -97,7 +96,7 @@ export default function Weather() {
   const fetchWeatherByCoords = async (lat, lon) => {
     setLoading(true);
     try {
-      const res = await axios.post(`${API_BASE_URL}/weather/coords`, {
+      const res = await axios.post("http://localhost:5001/api/weather/coords", {
         latitude: lat,
         longitude: lon,
       });
@@ -156,7 +155,7 @@ export default function Weather() {
 
     setLoading(true);
     try {
-      const res = await axios.post(`${API_BASE_URL}/weather`, {
+      const res = await axios.post("http://localhost:5001/api/weather", {
         location: city,
       });
       const data = res.data;

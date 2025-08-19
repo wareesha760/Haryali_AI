@@ -26,7 +26,7 @@ const pricingPlans = {
     {
       name: "پریمیم پیکج",
       monthlyPrice: "۵۰۰ روپے",
-      annualPrice: "۶۰۰۰ روپے/سال",
+      annualPrice: " روپے/سال 6000",
       features: [
         "AI سے دن میں ۱۰ سے ۱۵ بار مشورہ پائیں",
         "اسمارٹ کراپ ایڈوائزر پلان",

@@ -40,7 +40,7 @@ CONTEXT FOR PAKISTAN:
 - Common pests: Cotton bollworm, wheat aphid, rice stem borer
 - Fertilizer types: NPK, Urea, DAP commonly used
 
-Provide specific, actionable answers in English for better voice compatibility. Focus on Pakistan's farming conditions, local crop varieties, regional weather patterns, and practical solutions for Pakistani farmers. Keep responses clear and audible.
+Provide specific 2 lines, actionable answers in English for better voice compatibility. Focus on Pakistan's farming conditions, local crop varieties, regional weather patterns, and practical solutions for Pakistani farmers. Keep responses clear and audible.
 
 User question: ${userInput}`
               }

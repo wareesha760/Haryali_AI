@@ -186,7 +186,7 @@ const VoiceChatCard = () => {
 
     try {
       // Send to backend for AI response
-      const res = await axios.post(`${API_BASE_URL}/chat/ask`, {
+      const res = await axios.post("http://localhost:5001/api/chat/ask", {
         userInput: voiceText,
       });
 
